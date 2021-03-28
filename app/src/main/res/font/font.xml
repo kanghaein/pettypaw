@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+<font-family
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/bmjua"/>
+        android:font="@font/bmjua"
+        app:font="@font/bmjua"
+        app:fontStyle="normal"
+        app:fontWeight="400"
+        tools:ignore="UnusedAttribute"
+        />
 
 </font-family>

@@ -13,7 +13,8 @@
         android:text="반려동물 등록"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"/>
+        android:textSize="30sp"
+        android:fontFamily="@font/bmjua"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,12 +26,16 @@
         <TextView
             android:text="이름"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bmjua"
+            android:textSize="20sp"
+            />
 
         <EditText
             android:id="@+id/et_name"
             android:layout_width="200dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"/>
 
     </LinearLayout>
 
@@ -39,17 +44,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="40dp"
+        >
 
         <TextView
             android:text="나이"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bmjua"
+            android:textSize="20sp"/>
 
         <EditText
             android:id="@+id/et_age"
             android:layout_width="200dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"/>
 
     </LinearLayout>
 
@@ -63,25 +72,30 @@
         <TextView
             android:text="성별"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bmjua"
+            android:textSize="20sp"/>
 
         <RadioGroup
             android:id="@+id/rg_gender"
             android:orientation="horizontal"
             android:layout_width="200dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp">
 
             <RadioButton
                 android:id="@+id/rb_man"
                 android:text="남자"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                />
 
             <RadioButton
                 android:id="@+id/rb_woman"
                 android:text="여자"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                />
 
         </RadioGroup>
 
@@ -97,13 +111,18 @@
         <TextView
             android:text="색상"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            />
 
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="200dp"
             android:layout_height="40dp"
-            android:entries="@array/color"/>
+            android:entries="@array/color"
+            android:layout_marginLeft="20dp"
+
+            />
 
     </LinearLayout>
 
@@ -114,7 +133,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#000000"
-        android:text="등록"/>
+        android:text="등록"
+        android:textSize="20sp"
+        />
 
 
 </LinearLayout>
