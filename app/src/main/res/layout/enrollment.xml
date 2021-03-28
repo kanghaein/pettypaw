@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:gravity="center"
+        android:text="반려동물을 등록하고\n사용해주시길 바랍니다."
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:textSize="30sp"/>
+
+    <Button
+        android:id="@+id/btn_member"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#000000"
+        android:text="반려동물 등록하기"/>
+
+
+
+
+</LinearLayout>
