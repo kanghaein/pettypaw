@@ -38,6 +38,15 @@
             android:textSize="20sp"
             android:fontFamily="@font/bmjua"/>
 
+        <Button
+            android:id="@+id/btn_member3"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:textColor="#000000"
+            android:text="test button"
+            android:textSize="20sp"
+            android:fontFamily="@font/bmjua"/>
+
     </LinearLayout>
 
 
