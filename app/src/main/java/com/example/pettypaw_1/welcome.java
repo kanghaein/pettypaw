@@ -1,4 +1,9 @@
 package com.example.pettypaw_1;
 
-public class welcome {
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class welcome extends AppCompatActivity {
+
+
 }
