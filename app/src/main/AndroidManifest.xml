@@ -17,6 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".welcome"></activity>
+        <activity android:name=".enrollment"></activity>
     </application>
 
 </manifest>
