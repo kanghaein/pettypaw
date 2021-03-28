@@ -19,8 +19,6 @@
         </activity>
         <activity android:name=".welcome"></activity>
         <activity android:name=".enrollment"></activity>
-        <activity android:name=".enrollment1"></activity>
-
     </application>
 
 </manifest>

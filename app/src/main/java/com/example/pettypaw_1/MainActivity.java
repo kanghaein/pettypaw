@@ -14,15 +14,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button button1 = findViewById(R.id.button1); //로그인
         Button button2 = findViewById(R.id.button2); //회원가입
 
-
-        button2.setOnClickListener(new Button.OnClickListener(){
-
+        button1.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(getApplicationContext(),SignupActivity.class);
-                startActivity(intent1);
+                Intent intent = new Intent(getApplicationContext(),enrollment.class);
+                startActivity(intent);
             }
         });
 
