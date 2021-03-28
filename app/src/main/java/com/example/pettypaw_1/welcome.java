@@ -6,5 +6,4 @@ import androidx.appcompat.app.AppCompatActivity;
 public class welcome extends AppCompatActivity {
 
 
-
 }
