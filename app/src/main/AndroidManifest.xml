@@ -32,6 +32,7 @@
         <activity android:name=".welcome"></activity>
         <activity android:name=".enrollment"></activity>
         <activity android:name=".enrollment1"></activity>
+        <activity android:name=".calendar"></activity>
 
     </application>
 
