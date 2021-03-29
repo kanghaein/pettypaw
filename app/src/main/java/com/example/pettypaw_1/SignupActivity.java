@@ -27,7 +27,7 @@ public class SignupActivity extends AppCompatActivity {
 
     // 레이아웃들의 id값들 선언
     EditText sign_ID, sign_PW, sign_PW_check;
-    Button btn_back, btn_complete;
+    Button btn_back, btn_complete, btn_dc;
 
     // DatabaseReference 가져오기
     private DatabaseReference mDatabase;
@@ -43,6 +43,7 @@ public class SignupActivity extends AppCompatActivity {
         sign_PW_check = findViewById(R.id.sign_PW_check);
         btn_complete = findViewById(R.id.btn_complete);
         btn_back = findViewById(R.id.btn_back);
+        btn_dc = findViewById(R.id.btn_dc);
 
         // 파이어베이스 연동
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -66,6 +67,16 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+        btn_dc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //sign ID 랑 파이어베이스에 있는 데이터랑 겹치지 않으면,
+                Toast.makeText(getApplicationContext(),"사용하실 수 있습니다.",Toast.LENGTH_SHORT).show();
+                //sign ID 랑 파이어베이스에 있는 데이터랑 겹치면,
+                //Toast.makeText(getApplicationContext(),"사용중인 아이디입니다.",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // 가입완료 버튼
         btn_complete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +92,9 @@ public class SignupActivity extends AppCompatActivity {
                 // 비밀번호와 비밀번호 확인이 일치한다면
                 else if(getUserPw.equals(getUserPwCheck)) {
                     writeNewData("1", getUserId, getUserPw); // DB에 데이터 쓰기
+
+                    Intent intent = new Intent(getApplicationContext(),enrollment.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -130,6 +144,11 @@ public class SignupActivity extends AppCompatActivity {
                     Toast.makeText(com.example.pettypaw_1.SignupActivity.this, "데이터 없음...", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            //업데이트 해야함
+
+
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

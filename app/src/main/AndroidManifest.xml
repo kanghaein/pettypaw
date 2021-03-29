@@ -12,11 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pettypaw_1">
-        <activity android:name=".CheckDetail"></activity>
+        <activity android:name=".ViewCalendar"></activity>
+        <activity android:name=".CheckDetail" />
         <activity
             android:name=".SignupActivity"
             android:label="회원가입"
-            android:theme="@style/Theme.Pettypaw_1"></activity>
+            android:theme="@style/Theme.Pettypaw_1" />
         <activity
             android:name=".MainActivity"
             android:label="로그인"

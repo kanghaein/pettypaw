@@ -48,8 +48,19 @@ public class MainActivity extends AppCompatActivity {
         lg_ID = findViewById(R.id.lg_ID);
         lg_PW = findViewById(R.id.lg_PW);
         btn_sign = findViewById(R.id.btn_sign);
+        btn_login = findViewById(R.id.btn_login);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // 로그인 버튼
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 로그인 버튼 누르면 로그인 창으로 이동(전제조건 파이어베이스에 있는 정보와 맞아야함)
+                Intent intent1 = new Intent(getApplicationContext(),ViewCalendar.class);
+                startActivity(intent1);
+            }
+        });
 
         // 회원가입 버튼
         btn_sign.setOnClickListener(new View.OnClickListener(){
