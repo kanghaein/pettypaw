@@ -12,7 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pettypaw_1">
-        <activity android:name=".ViewCalendar"></activity>
+        <activity android:name=".RequestInvitation"></activity>
+        <activity android:name=".AddSchedule" />
+        <activity android:name=".AlarmSetting" />
+        <activity android:name=".MemberSetting" />
+        <activity android:name=".LeaderSetting" />
+        <activity android:name=".GroupManagement" />
+        <activity android:name=".CurrentCalendar" />
+        <activity android:name=".ViewCalendar" />
         <activity android:name=".CheckDetail" />
         <activity
             android:name=".SignupActivity"
