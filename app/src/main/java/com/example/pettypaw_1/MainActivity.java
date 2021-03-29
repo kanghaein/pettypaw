@@ -2,6 +2,8 @@ package com.example.pettypaw_1;
 
 import androidx.annotation.Nullable;
         import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
         import android.content.Intent;
         import android.os.Bundle;
@@ -9,6 +11,7 @@ import androidx.annotation.Nullable;
         import android.view.View;
         import android.widget.Button;
         import android.widget.EditText;
+import android.widget.LinearLayout;
         import android.widget.Toast;
 
         import com.google.android.gms.tasks.OnFailureListener;
