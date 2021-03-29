@@ -21,8 +21,7 @@
         android:layout_height="150dp"
         android:textColor="#000000"
         android:text="반려동물 등록하러 가기"
-        android:textSize="30sp"
-        android:fontFamily="@font/bmjua"/>
+        android:textSize="30sp"/>
 
 
 

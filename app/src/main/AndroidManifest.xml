@@ -3,6 +3,7 @@
     package="com.example.pettypaw_1">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -11,13 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pettypaw_1">
-
+        <activity android:name=".CheckDetail"></activity>
         <activity
             android:name=".SignupActivity"
             android:label="회원가입"
-            android:theme="@style/Theme.Pettypaw_1">
-        </activity>
-
+            android:theme="@style/Theme.Pettypaw_1"></activity>
         <activity
             android:name=".MainActivity"
             android:label="로그인"
@@ -28,11 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".welcome"></activity>
-        <activity android:name=".enrollment"></activity>
-        <activity android:name=".enrollment1"></activity>
-
+        <activity android:name=".welcome" />
+        <activity android:name=".enrollment" />
+        <activity android:name=".enrollment1" />
     </application>
 
 </manifest>

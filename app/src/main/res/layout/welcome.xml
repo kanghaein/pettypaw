@@ -24,28 +24,18 @@
             android:id="@+id/btn_leader"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:text="혼자 사용할 예정이거나 \n 누군가를 초대할 경우"
+            android:text="혼자 사용할 예정이거나\n누군가를 초대할 경우"
             android:textSize="20sp"
-            android:textColor="#000000"
-            android:fontFamily="@font/bmjua"/>
+            android:textColor="#000000"/>
 
         <Button
             android:id="@+id/btn_member"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:textColor="#000000"
-            android:text="캘린더를 사용하고 있는 사람에게 \n초대 받은 경우"
-            android:textSize="20sp"
-            android:fontFamily="@font/bmjua"/>
+            android:text="캘린더를 사용하고 있는 사람에게\n초대 받은 경우"
+            android:textSize="20sp"/>
 
-        <Button
-            android:id="@+id/btn_member3"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:textColor="#000000"
-            android:text="test button"
-            android:textSize="20sp"
-            android:fontFamily="@font/bmjua"/>
 
     </LinearLayout>
 

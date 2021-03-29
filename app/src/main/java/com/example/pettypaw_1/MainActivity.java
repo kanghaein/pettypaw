@@ -2,14 +2,17 @@ package com.example.pettypaw_1;
 
 import androidx.annotation.Nullable;
         import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import android.content.Intent;
+import android.content.Intent;
         import android.os.Bundle;
         import android.util.Log;
         import android.view.View;
         import android.widget.Button;
         import android.widget.EditText;
-        import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
         import com.google.android.gms.tasks.OnFailureListener;
         import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,6 +21,8 @@ import androidx.annotation.Nullable;
         import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
         import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 // 로그인 구현, 입력창이 비었을 때 이벤트... 필요
 
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // 레이아웃 id 값들을 불러와 변수에 저장
         lg_ID = findViewById(R.id.lg_ID);
