@@ -32,7 +32,7 @@
         >
 
         <Button
-            android:id="@+id/btn_alram_mem"
+            android:id="@+id/btn_alram"
             android:layout_width="350dp"
             android:layout_height="100dp"
             android:text="알림설정"
@@ -41,7 +41,7 @@
             />
 
         <Button
-            android:id="@+id/btn_pet_register_edit_mem"
+            android:id="@+id/btn_pet_register_edit"
             android:layout_width="350dp"
             android:layout_height="100dp"
             android:text="반려동물 등록 / 편집"
@@ -59,7 +59,7 @@
             android:layout_marginTop="30dp"/>
 
         <Button
-            android:id="@+id/btn_calender_mem"
+            android:id="@+id/btn_calender"
             android:layout_width="350dp"
             android:layout_height="100dp"
             android:text="이용 중인 캘린더"

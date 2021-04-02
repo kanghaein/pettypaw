@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,32 +23,16 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
 
 public class ViewCalendar extends AppCompatActivity {
 
-    /**
-     * 연/월 텍스트뷰
-     */
-    private TextView tvDate;
-    /**
-     * 그리드뷰 어댑터
-     */
-    private GridAdapter gridAdapter;
 
-    /**
-     * 일 저장 할 리스트
-     */
-    private ArrayList<String> dayList;
-
-    /**
-     * 그리드뷰
-     */
-    private GridView gridView;
-
-    /**
-     * 캘린더 변수
-     */
-    private Calendar mCal;
+    private TextView tvDate; //연/월 텍스트뷰
+    private GridAdapter gridAdapter; //그리드뷰 어댑터
+    private ArrayList<String> dayList; //일 저장할 리스트
+    private GridView gridView; //그리드뷰
+    private Calendar mCal; //캘린더 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +42,9 @@ public class ViewCalendar extends AppCompatActivity {
 
         ImageButton btn_back = findViewById(R.id.btn_back);
         ImageButton btn_forward = findViewById(R.id.btn_forward);
+
+        getSupportActionBar().setTitle("캘린더"); //액션바 타이틀 변경
+
 
         tvDate = (TextView)findViewById(R.id.tv_date);
         gridView = (GridView)findViewById(R.id.gridview);
@@ -115,14 +104,10 @@ public class ViewCalendar extends AppCompatActivity {
         gridAdapter = new GridAdapter(getApplicationContext(), dayList);
         gridView.setAdapter(gridAdapter);
 
-
     }
 
-    /**
-     * 해당 월에 표시할 일 수 구함
-     *
-     * @param month
-     */
+    //해당 월에 표시할 일 수 구함
+    //@param month
     private void setCalendarDate(int month) {
         mCal.set(Calendar.MONTH, month - 1);
 
@@ -132,22 +117,16 @@ public class ViewCalendar extends AppCompatActivity {
 
     }
 
-    /**
-     * 그리드뷰 어댑터
-     *
-     */
+    //그리드뷰 어댑터
     private class GridAdapter extends BaseAdapter {
 
         private final List<String> list;
 
         private final LayoutInflater inflater;
 
-        /**
-         * 생성자
-         *
-         * @param context
-         * @param list
-         */
+        //생성자
+        //@param context
+        //@param list
         public GridAdapter(Context context, List<String> list) {
             this.list = list;
             this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -199,6 +178,28 @@ public class ViewCalendar extends AppCompatActivity {
 
     private class ViewHolder {
         TextView tvItemGridView;
+    }
+
+
+
+    //액션버튼 메뉴 액션바에 집어넣기
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    //액션버튼 클릭했을 때 동작
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //설정 아이콘
+        if (id == R.id.setting_icon) {
+            Intent intent = new Intent(this, LeaderSetting.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
