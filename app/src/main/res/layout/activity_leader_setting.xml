@@ -47,7 +47,7 @@
             android:text="반려동물 등록 / 편집"
             android:textColor="#000000"
             android:textSize="30sp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="10dp"/>
 
         <Button
             android:id="@+id/btn_grp_management"
@@ -56,7 +56,7 @@
             android:text="그룹관리"
             android:textColor="#000000"
             android:textSize="30sp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="10dp"/>
 
         <Button
             android:id="@+id/btn_calender"
@@ -65,7 +65,7 @@
             android:text="이용 중인 캘린더"
             android:textColor="#000000"
             android:textSize="30sp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
