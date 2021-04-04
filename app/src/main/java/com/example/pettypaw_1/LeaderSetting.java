@@ -20,10 +20,11 @@ public class LeaderSetting extends AppCompatActivity {
         btn_alram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), AlarmSetting.class);
-                startActivity(intent);
+
+
             }
         });
+
 
         btn_grp_management = findViewById(R.id.btn_grp_management);
         btn_grp_management.setOnClickListener(new View.OnClickListener() {

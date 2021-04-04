@@ -9,12 +9,13 @@ import android.widget.TextView;
 public class AlarmTimeViewActivity extends AppCompatActivity {
 
     TextView alarmSetTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_time_view);
 
-        alarmSetTime=findViewById(R.id.tv_alarm_set_day_time);
+        alarmSetTime = findViewById(R.id.tv_alarm_set_day_time);
 
         Intent intent=getIntent();
         int setDay=intent.getIntExtra("setDay",0);
@@ -49,7 +50,7 @@ public class AlarmTimeViewActivity extends AppCompatActivity {
                 break;
         }
 
-        String setTime=day+"\n"+"알람 세팅 시간"+intent.getStringExtra("setTime");
+        String setTime = day+"\n"+"알람 세팅 시간"+intent.getStringExtra("setTime");
         alarmSetTime.setText(setTime);
     }
 }
