@@ -1,72 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+<TimePicker
+    android:id="@+id/tp_timepicker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:timePickerMode="spinner"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="알림설정"
-            android:textSize="40sp"
-            android:layout_weight="1"
-            android:layout_marginTop="80dp"
-            />
+<Button
+    android:id="@+id/button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
+    android:onClick="regist"
+    android:text="등록"
+    app:layout_constraintBaseline_toBaselineOf="@+id/button2"
+    app:layout_constraintEnd_toStartOf="@+id/button2"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tp_timepicker" />
 
-    </LinearLayout>
+<Button
+    android:id="@+id/button2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="28dp"
+    android:onClick="unregist"
+    android:text="해지"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toEndOf="@+id/button"
+    app:layout_constraintTop_toBottomOf="@+id/tp_timepicker" />
 
-    <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80dp">
+<CheckBox
+    android:id="@+id/cb_sun"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="일요일"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/cb_mon"
+    android:layout_marginBottom="120dp"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:ignore="MissingConstraints" />
 
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="7시간 전 알림"
-            android:textSize="24sp" />
+<CheckBox
+    android:id="@+id/cb_mon"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="월요일"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/cb_tue"
+    android:layout_marginBottom="120dp"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toEndOf="@+id/cb_sun"
+    tools:ignore="MissingConstraints" />
 
-        <Switch
-            android:id="@+id/switch2"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="5시간 전 알림"
-            android:textSize="24sp"
-            android:layout_marginTop="30dp"/>
+<CheckBox
+    android:id="@+id/cb_tue"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="화요일"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/cb_wed"
+    app:layout_constraintHorizontal_bias="0.5"
+    android:layout_marginBottom="120dp"
+    app:layout_constraintStart_toEndOf="@+id/cb_mon"
+    tools:ignore="MissingConstraints" />
 
-        <Switch
-            android:id="@+id/switch3"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="3시간 전 알림"
-            android:textSize="24sp"
-            android:layout_marginTop="30dp"/>
+<CheckBox
+    android:id="@+id/cb_wed"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="수요일"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:layout_marginBottom="120dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toEndOf="@+id/cb_tue"
+    tools:ignore="MissingConstraints" />
 
-        <Switch
-            android:id="@+id/switch4"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="1시간 전 알림"
-            android:textSize="24sp"
-            android:layout_marginTop="30dp"/>
+<CheckBox
+    android:id="@+id/cb_thu"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="목요일"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/cb_fri"
+    app:layout_constraintHorizontal_bias="0.5"
+    android:layout_marginBottom="50dp"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:ignore="MissingConstraints" />
 
+<CheckBox
+    android:id="@+id/cb_fri"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="금요일"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/cb_sat"
+    app:layout_constraintHorizontal_bias="0.5"
+    android:layout_marginBottom="50dp"
+    app:layout_constraintStart_toEndOf="@+id/cb_thu"
+    tools:ignore="MissingConstraints" />
 
-    </LinearLayout>
+<CheckBox
+    android:id="@+id/cb_sat"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="토요일"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    android:layout_marginBottom="50dp"
+    app:layout_constraintStart_toEndOf="@+id/cb_fri"
+    tools:ignore="MissingConstraints" />
 
-
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
