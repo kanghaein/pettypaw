@@ -19,7 +19,9 @@
         <activity android:name=".LeaderSetting" />
         <activity android:name=".GroupManagement" />
         <activity android:name=".CurrentCalendar" />
-        <activity android:name=".ViewCalendar" />
+        <activity android:name=".ViewCalendar">
+
+        </activity>
         <activity android:name=".CheckDetail" />
         <activity
             android:name=".SignupActivity"

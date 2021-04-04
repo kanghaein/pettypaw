@@ -1,53 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF" >
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffffff">
+
+        <Button
+            android:id="@+id/monthPrevious"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:gravity="center_horizontal"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/ic_baseline_arrow_back_ios_24"/>
+
+        <TextView
+            android:id="@+id/monthText"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="MonthView"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:id="@+id/monthNext"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:gravity="center_horizontal"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_baseline_arrow_forward_ios_24"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFF6A9">
-
-        <ImageButton
-            android:layout_marginLeft="5dp"
-            android:id="@+id/btn_back"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="#FFF6A9"
-            android:src="@drawable/ic_baseline_arrow_back_ios_24"/>
+        android:orientation="horizontal"
+        android:background="#22000000">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="일"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
 
         <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="290dp"
-            android:layout_height="50dp"
-            android:background="#FFF6A9"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:textColor="#000000"
-            android:textSize="20sp" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="월"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
 
-        <ImageButton
-            android:id="@+id/btn_forward"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="#FFF6A9"
-            android:src="@drawable/ic_baseline_arrow_forward_ios_24"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="화"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="수"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="목"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="금"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="토"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"/>
     </LinearLayout>
 
-
     <GridView
-        android:id="@+id/gridview"
+        android:id="@+id/monthView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:listSelector="#FFBE5F"
-        android:numColumns="7">
+        android:layout_height="335dp"
+        android:background="#ffbbbbbb"
+        android:horizontalSpacing="1dp"
+        android:numColumns="7"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="1dp"></GridView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <ListView
+            android:id="@+id/todo_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-    </GridView>
+    </LinearLayout>
 
 </LinearLayout>

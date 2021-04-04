@@ -1,205 +1,62 @@
 package com.example.pettypaw_1;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.ActionBar;
 
 public class ViewCalendar extends AppCompatActivity {
 
-
-    private TextView tvDate; //연/월 텍스트뷰
-    private GridAdapter gridAdapter; //그리드뷰 어댑터
-    private ArrayList<String> dayList; //일 저장할 리스트
-    private GridView gridView; //그리드뷰
-    private Calendar mCal; //캘린더 변수
+    GridView monthView;
+    TextView monthText;
+    MonthAdapter adt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_view_calendar);
 
-        ImageButton btn_back = findViewById(R.id.btn_back);
-        ImageButton btn_forward = findViewById(R.id.btn_forward);
+        monthView = findViewById(R.id.monthView); //그리드뷰 객체 참조
+        adt = new MonthAdapter(this); //어댑터 객체 생성
+        monthView.setAdapter(adt); //그리드뷰에 어댑터 설정
 
-        getSupportActionBar().setTitle("캘린더"); //액션바 타이틀 변경
+        monthText = findViewById(R.id.monthText);
+        setMonthText();
 
+        Button monthPrevious = findViewById(R.id.monthPrevious);
+        Button monthNext = findViewById(R.id.monthNext);
 
-        tvDate = (TextView)findViewById(R.id.tv_date);
-        gridView = (GridView)findViewById(R.id.gridview);
+        //할일 listview로 설정한다.
+        ListView todo_list = (ListView) findViewById(R.id.todo_list);
 
-        // 오늘에 날짜를 세팅 해준다.
-        long now = System.currentTimeMillis();
-        final Date date = new Date(now);
-
-        //날짜, 시간 정보 받아오기
-        //연,월,일을 따로 저장
-        final SimpleDateFormat curYearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
-        final SimpleDateFormat curMonthFormat = new SimpleDateFormat("MM", Locale.KOREA);
-        final SimpleDateFormat curDayFormat = new SimpleDateFormat("dd", Locale.KOREA);
-
-        //백버튼 누를시 저번달로 넘어감
-        btn_back.setOnClickListener(new OnClickListener() {
+        // 뒤로가기 버튼 이벤트 리스너 설정
+        monthPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                mCal = Calendar.getInstance();
-                mCal.set(Integer.parseInt(curYearFormat.format(date)), Integer.parseInt(curMonthFormat.format(date)) - 1 - 1, 1);
-                int dayNum = mCal.get(Calendar.DAY_OF_WEEK);
-                //1일 - 요일 매칭 시키기 위해 공백 add
-                for (int i = 1; i < dayNum; i++) {
-                    dayList.add("");
-                }
-                setCalendarDate(mCal.get(Calendar.MONTH) + 1);
-                gridAdapter.notifyDataSetChanged();
+                adt.setPreviousMonth();
+                adt.notifyDataSetChanged(); //어댑터 데이터 갱신하고 뷰 다시 뿌리기
+                setMonthText();
             }
         });
 
-        //현재 날짜 텍스트뷰에 뿌려줌  텍스트뷰에는 해당년도랑 월 표시
-        tvDate.setText(curYearFormat.format(date) + "/" + curMonthFormat.format(date));
-
-        //gridview 요일 표시 - 그리드뷰에는 일 표시
-        dayList = new ArrayList<String>();
-        dayList.add("일");
-        dayList.add("월");
-        dayList.add("화");
-        dayList.add("수");
-        dayList.add("목");
-        dayList.add("금");
-        dayList.add("토");
-
-        mCal = Calendar.getInstance();
-
-        //이번달 1일 무슨요일인지 판단 mCal.set(Year,Month,Day)
-        mCal.set(Integer.parseInt(curYearFormat.format(date)), Integer.parseInt(curMonthFormat.format(date)) - 1, 1);
-        int dayNum = mCal.get(Calendar.DAY_OF_WEEK);
-
-
-        dayList = new ArrayList<String>();
-        //1일 - 요일 매칭 시키기 위해 공백 add
-        for (int i = 1; i < dayNum; i++) {
-            dayList.add("");
-        }
-        setCalendarDate(mCal.get(Calendar.MONTH) + 1);
-
-        gridAdapter = new GridAdapter(getApplicationContext(), dayList);
-        gridView.setAdapter(gridAdapter);
-
-    }
-
-    //해당 월에 표시할 일 수 구함
-    //@param month
-    private void setCalendarDate(int month) {
-        mCal.set(Calendar.MONTH, month - 1);
-
-        for (int i = 0; i < mCal.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-            dayList.add("" + (i + 1));
-        }
-
-    }
-
-    //그리드뷰 어댑터
-    private class GridAdapter extends BaseAdapter {
-
-        private final List<String> list;
-
-        private final LayoutInflater inflater;
-
-        //생성자
-        //@param context
-        //@param list
-        public GridAdapter(Context context, List<String> list) {
-            this.list = list;
-            this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public String getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-
-            if (convertView == null) {
-                convertView = inflater.inflate(R.layout.item_calendar_gridview, parent, false);
-                holder = new ViewHolder();
-
-                holder.tvItemGridView = (TextView)convertView.findViewById(R.id.tv_item_gridview);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder)convertView.getTag();
+        // 앞으로 가기 버튼에 이벤트 리스너 설정
+        monthNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adt.setNextMonth();
+                adt.notifyDataSetChanged(); //어댑터 데이터 갱신하고 뷰 다시 뿌리기
+                setMonthText();
             }
-            holder.tvItemGridView.setText("" + getItem(position));
-
-            //해당 날짜 텍스트 컬러,배경 변경
-            mCal = Calendar.getInstance();
-            //오늘 day 가져옴
-            Integer today = mCal.get(Calendar.DAY_OF_MONTH);
-            String sToday = String.valueOf(today);
-            if (sToday.equals(getItem(position))) { //오늘 day 텍스트 컬러 변경
-                holder.tvItemGridView.setTextColor(getResources().getColor(R.color.red));
-            }
-            return convertView;
-        }
+        });
     }
 
-    private class ViewHolder {
-        TextView tvItemGridView;
+    public void setMonthText(){
+        int curYear = adt.getCurYear();
+        int curMonth = adt.getCurMonth();
+        monthText.setText(curYear+"년 "+(curMonth+1)+"월");
     }
-
-
-
-    //액션버튼 메뉴 액션바에 집어넣기
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    //액션버튼 클릭했을 때 동작
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        //설정 아이콘
-        if (id == R.id.setting_icon) {
-            Intent intent = new Intent(this, LeaderSetting.class);
-            startActivity(intent);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 }
