@@ -23,21 +23,26 @@
 
         </activity>
         <activity android:name=".CheckDetail" />
+
         <activity
             android:name=".SignupActivity"
             android:label="회원가입"
             android:theme="@style/Theme.Pettypaw_1" />
+
         <activity
             android:name=".MainActivity"
             android:label="로그인"
             android:theme="@style/Theme.Pettypaw_1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".welcome" />
+
+        <activity android:name=".welcome"
+            android:label="환영합니다"
+            android:theme="@style/Theme.Pettypaw_1"/>
+
         <activity android:name=".enrollment" />
         <activity android:name=".enrollment1" />
     </application>
