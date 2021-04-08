@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:title="푸쉬 알림"
+        android:key="pushAlarm"
+        android:defaultValue="true"
+        android:summary="일정이 시작되기 전에 알림을 받을 수 있습니다."/>
+
+    <ListPreference
+        android:title="알림 시간 설정"
+        android:key="pushAlarmTime"
+        android:entries="@array/pushAlarmTimeList"
+        android:entryValues="@array/pushAlarmTimeList_values"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:dependency="pushAlarm"/>
+</PreferenceScreen>

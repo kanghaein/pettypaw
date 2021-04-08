@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
                                 User user = snapshot.child(getUserID).getValue(User.class);
                                 // 얻어온 PW와 입력된 PW가 일치한다면
                                 if ((user.PW).equals(getUserPW)) {
-                                    // welcome 창으로 이동
-                                    Intent intent = new Intent(getApplicationContext(), welcome.class);
+                                    // ViewCalendar 창으로 이동
+                                    Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
                                     startActivity(intent);
                                     finish();
                                 }
