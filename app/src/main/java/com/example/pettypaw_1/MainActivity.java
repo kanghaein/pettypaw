@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     // 화면 간 전환을 위한 REQUEST_CODE_SIGN 설정
     public static final int REQUEST_CODE_SIGN = 101;
 
+    // 다른 액티비티에서 접근 가능
+    public static Context context_main;
 
     // 레이아웃의 id 값들 선언
     EditText lg_ID, lg_PW;
@@ -60,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 다른 액티비티에서 접근 가능
+        context_main = this;
 
         //알람
         timePicker=findViewById(R.id.tp_timepicker);
