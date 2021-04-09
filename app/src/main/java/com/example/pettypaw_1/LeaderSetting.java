@@ -17,14 +17,6 @@ public class LeaderSetting extends AppCompatActivity {
         setContentView(R.layout.activity_leader_setting);
 
         btn_alram = findViewById(R.id.btn_alram);
-        btn_alram.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), Preference.class);
-                startActivity(intent);
-
-            }
-        });
 
 
         btn_grp_management = findViewById(R.id.btn_grp_management);
@@ -44,7 +36,6 @@ public class LeaderSetting extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
 
     }

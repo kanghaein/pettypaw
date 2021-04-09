@@ -132,8 +132,8 @@ public class SignupActivity extends AppCompatActivity {
                                 userDB.child(getUserId).setValue(user);
                                 Toast.makeText(SignupActivity.this, "가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
                                 finish();
-                                //회원가입 완료시 welcome창으로 이동
-                                Intent intent = new Intent(getApplicationContext(), welcome.class);
+                                //회원가입 완료시 MainActivity로 이동
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                             }
                         }
