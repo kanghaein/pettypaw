@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.content.Context;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,7 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class enrollment1 extends AppCompatActivity {
+
+public class PetEdit extends AppCompatActivity {
 
     EditText et_name, et_age;
     Button btn_enroll;
@@ -34,14 +36,22 @@ public class enrollment1 extends AppCompatActivity {
     // User_pet.java 를 통해 데이터베이스 접근
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
 
+    // 다른 액티비티에서 접근 가능
+    public static Context context_enrollment1;
+
     // MainActivity 에서 가져온 lg_ID 라는 변수 이용 => 로그인한 ID를 부모로 펫정보 입력
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.enrollment1);
+        setContentView(R.layout.pet_edit);
+
+        // 다른 액티비티에서 접근 가능
+        context_enrollment1 = this;
+
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("ListNamePosition");
 
         et_name = findViewById(R.id.et_name);
         et_age = findViewById(R.id.et_age);
@@ -77,25 +87,23 @@ public class enrollment1 extends AppCompatActivity {
                 petDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // 이름칸과 나이칸이 비어있다면
                         if(getPetName.equals("") || getPetAge.equals("")) {
-                            Toast.makeText(enrollment1.this, "정보를 입력해주세요", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PetEdit.this, "정보를 입력해주세요", Toast.LENGTH_SHORT).show();
                         }
                         else{
                             User_pet pet = new User_pet(getPetName, getPetAge, getPetGender, getColor);
 
                             // 애완동물 데이터 입력, getUserID는 로그인한 ID
-                            petDB.child(getUserID).child("Pet Information").child(getPetName).setValue(pet);
+                            petDB.child(getUserID).child("Pet Information").child(name).setValue(pet);
 
                             // 설정 => 반려동물 등록/편집 에서의 리스트 출력을 위한 애완동물 리스트 데이터 입력
-                            petDB.child(getUserID).child("Pet List").child(getPetName).setValue(getPetName);
+                            petDB.child(getUserID).child("Pet List").child(name).setValue(getPetName);
 
-                            Toast.makeText(enrollment1.this, "등록 완료", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PetEdit.this, "수정 완료", Toast.LENGTH_SHORT).show();
                             finish();
 
-                            Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
+                            Intent intent = new Intent(getApplicationContext(), pet_list.class);
                             startActivity(intent);
-
                         }
 
                     }
@@ -105,7 +113,6 @@ public class enrollment1 extends AppCompatActivity {
 
                     }
                 });
-
             }
         });
 

@@ -1,7 +1,3 @@
-
-
-
-
 package com.example.pettypaw_1;
 
 import androidx.annotation.NonNull;
@@ -88,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         // User.java 를 통해 데이터베이스 접근
         final DatabaseReference userDB = mDatabase.getReference("User");
+        // Uer_pet.java 를 통해 데이터베이스 접근
+        final DatabaseReference petDB = mDatabase.getReference("User_pet");
 
 
         // 로그인 버튼
@@ -113,10 +111,30 @@ public class MainActivity extends AppCompatActivity {
                                 User user = snapshot.child(getUserID).getValue(User.class);
                                 // 얻어온 PW와 입력된 PW가 일치한다면
                                 if ((user.PW).equals(getUserPW)) {
-                                    // welcome 창으로 이동
-                                    Intent intent = new Intent(getApplicationContext(), welcome.class);
-                                    startActivity(intent);
-                                    finish();
+
+                                    // 이미 반려동물을 등록한 기존 유저라면 바로 캘린더로 이동
+                                    petDB.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.child(getUserID).exists()) {
+                                                Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                            else {
+                                                // 신규등록한 유저라면 welcome 창으로 이동
+                                                Intent intent = new Intent(getApplicationContext(), welcome.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
                                 }
                                 else {
                                     Toast.makeText(MainActivity.this, "ID 혹은 PW 가 옳지 않습니다", Toast.LENGTH_SHORT).show();

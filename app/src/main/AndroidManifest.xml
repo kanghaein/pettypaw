@@ -17,6 +17,9 @@
         <activity android:name=".AlarmSetting" />
         <activity android:name=".MemberSetting" />
         <activity android:name=".LeaderSetting" />
+        <activity android:name=".pet_list" />
+        <activity android:name=".PetEdit" />
+        <activity android:name=".PetAdditionalEnroll" />
         <activity android:name=".GroupManagement" />
         <activity android:name=".CurrentCalendar" />
         <activity android:name=".ViewCalendar">

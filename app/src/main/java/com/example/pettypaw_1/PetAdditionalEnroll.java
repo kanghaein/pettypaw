@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class enrollment1 extends AppCompatActivity {
+public class PetAdditionalEnroll extends AppCompatActivity {
 
     EditText et_name, et_age;
     Button btn_enroll;
@@ -28,6 +28,7 @@ public class enrollment1 extends AppCompatActivity {
     RadioGroup rg_gender;
     String getPetGender; // 애완동물 성별 값을 전달받을 변수
     Spinner spinner;
+    String name;
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -50,6 +51,8 @@ public class enrollment1 extends AppCompatActivity {
         rb_man = (RadioButton)findViewById(R.id.rb_man);
         rb_woman = (RadioButton)findViewById(R.id.rb_woman);
         spinner = (Spinner)findViewById(R.id.spinner);
+
+
 
 
         // 라디오버튼 이벤트
@@ -77,9 +80,8 @@ public class enrollment1 extends AppCompatActivity {
                 petDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // 이름칸과 나이칸이 비어있다면
                         if(getPetName.equals("") || getPetAge.equals("")) {
-                            Toast.makeText(enrollment1.this, "정보를 입력해주세요", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PetAdditionalEnroll.this, "정보를 입력해주세요", Toast.LENGTH_SHORT).show();
                         }
                         else{
                             User_pet pet = new User_pet(getPetName, getPetAge, getPetGender, getColor);
@@ -90,12 +92,11 @@ public class enrollment1 extends AppCompatActivity {
                             // 설정 => 반려동물 등록/편집 에서의 리스트 출력을 위한 애완동물 리스트 데이터 입력
                             petDB.child(getUserID).child("Pet List").child(getPetName).setValue(getPetName);
 
-                            Toast.makeText(enrollment1.this, "등록 완료", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PetAdditionalEnroll.this, "등록 완료", Toast.LENGTH_SHORT).show();
                             finish();
 
-                            Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
+                            Intent intent = new Intent(getApplicationContext(), pet_list.class);
                             startActivity(intent);
-
                         }
 
                     }
@@ -105,7 +106,6 @@ public class enrollment1 extends AppCompatActivity {
 
                     }
                 });
-
             }
         });
 
