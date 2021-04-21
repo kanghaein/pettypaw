@@ -18,14 +18,6 @@ public class LeaderSetting extends AppCompatActivity {
 
         // 알림설정
         btn_alram = findViewById(R.id.btn_alram);
-        btn_alram.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(), AlarmSetting.class);
-                startActivity(intent);
-
-            }
-        });
 
         // 반려동물 등록/편집
         btn_pet_register_edit = findViewById(R.id.btn_pet_register_edit);
@@ -57,7 +49,6 @@ public class LeaderSetting extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
 
     }
