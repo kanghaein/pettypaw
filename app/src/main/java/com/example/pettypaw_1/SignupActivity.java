@@ -46,6 +46,7 @@ public class SignupActivity extends AppCompatActivity {
         final DatabaseReference userDB = mDatabase.getReference("User");
 
 
+
         // 비밀번호 일치 확인 검사 작업
         sign_PW_check.addTextChangedListener(new TextWatcher(){
             @Override
@@ -128,12 +129,19 @@ public class SignupActivity extends AppCompatActivity {
                             }
                             else {
                                 User user = new User(getUserId, getUserPw);
-                                // 데이터 입력
+                                User_list user_list = new User_list("null", "null");
+
+                                // 입력한 정보를 DB의 (User -> 자신의 ID) 노드의 자식으로 저장
                                 userDB.child(getUserId).setValue(user);
+
+                                // 또한 (User -> User List -> 자신의 ID) 에 리더정보, 초대여부 를 초기 null 값으로 저장
+                                userDB.child("User List").child(getUserId).setValue(user_list);
+
                                 Toast.makeText(SignupActivity.this, "가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
                                 finish();
-                                //회원가입 완료시 welcome로 이동
-                                Intent intent = new Intent(getApplicationContext(), welcome.class);
+
+                                //회원가입 완료시 MainActivity 로 이동
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                             }
                         }

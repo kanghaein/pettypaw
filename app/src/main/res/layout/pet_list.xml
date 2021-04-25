@@ -30,7 +30,11 @@
             android:layout_gravity="center"
             android:layout_width="330dp"
             android:layout_height="match_parent"
-            android:dividerHeight="1dp"></ListView>
+            android:dividerHeight="1dp">
+
+
+        </ListView>
+
 
     </LinearLayout>
 

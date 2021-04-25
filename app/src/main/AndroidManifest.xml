@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pettypaw_1">
-        <activity android:name=".RequestInvitation"></activity>
+        <activity android:name=".RequestInvitation"/>
         <activity android:name=".AddSchedule" />
         <activity android:name=".AlarmSetting" />
         <activity android:name=".MemberSetting" />

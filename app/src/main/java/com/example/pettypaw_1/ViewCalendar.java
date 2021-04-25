@@ -9,14 +9,29 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ViewCalendar extends AppCompatActivity {
 
     GridView monthView;
     TextView monthText;
     MonthAdapter adt;
+    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+
+    final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    // User.java 를 통해 데이터베이스 접근
+    final DatabaseReference userDB = mDatabase.getReference("User");
+    // Uer_pet.java 를 통해 데이터베이스 접근
+    final DatabaseReference GroupDB = mDatabase.getReference("Group");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +91,29 @@ public class ViewCalendar extends AppCompatActivity {
         int id = item.getItemId();
         //설정 아이콘
         if (id == R.id.setting_icon) {
-            Intent intent = new Intent(this, LeaderSetting.class);
-            startActivity(intent);
+            userDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    String Invite = snapshot.child("User List").child(getUserID).child("Invite").getValue().toString();
+                    // 리더로 지정된 유저라면 LeaderSetting 으로 이동
+                    if (Invite.equals("Leader")) {
+                        Intent intent = new Intent(getApplicationContext(), LeaderSetting.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    // 리더가 아닌 유저라면 MemberSetting 으로 이동
+                    else{
+                        Intent intent = new Intent(getApplicationContext(), MemberSetting.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
         return super.onOptionsItemSelected(item);
