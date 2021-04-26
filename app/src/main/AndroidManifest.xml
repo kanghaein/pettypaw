@@ -49,6 +49,8 @@
         <activity android:name=".enrollment" />
         <activity android:name=".enrollment1" />
 
+        <activity android:name=".Preference" />
+
     </application>
 
 </manifest>

@@ -10,5 +10,18 @@
         <item>보라색</item>
     </string-array>
 
+    <string-array name="alarmlist">
+        <item>7시간 전</item>
+        <item>5시간 전</item>
+        <item>3시간 전</item>
+        <item>1시간 전</item>
+    </string-array>
+
+    <string-array name="alarmlist_value">
+        <item>7</item>
+        <item>5</item>
+        <item>3</item>
+        <item>1</item>
+    </string-array>
 
 </resources>

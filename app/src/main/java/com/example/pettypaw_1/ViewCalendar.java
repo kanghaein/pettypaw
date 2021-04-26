@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -50,6 +51,17 @@ public class ViewCalendar extends AppCompatActivity {
 
         //할일 listview로 설정한다.
         ListView todo_list = (ListView) findViewById(R.id.todo_list);
+        
+        //그리드뷰 각 item 클릭마다 position 출력
+        monthView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), "position: " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // 뒤로가기 버튼 이벤트 리스너 설정
         monthPrevious.setOnClickListener(new View.OnClickListener() {
@@ -100,15 +112,14 @@ public class ViewCalendar extends AppCompatActivity {
                     if (Invite.equals("Leader")) {
                         Intent intent = new Intent(getApplicationContext(), LeaderSetting.class);
                         startActivity(intent);
-                        finish();
                     }
                     // 리더가 아닌 유저라면 MemberSetting 으로 이동
                     else{
                         Intent intent = new Intent(getApplicationContext(), MemberSetting.class);
                         startActivity(intent);
-                        finish();
                     }
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
