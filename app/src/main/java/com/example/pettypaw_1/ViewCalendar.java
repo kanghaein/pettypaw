@@ -27,7 +27,6 @@ public class ViewCalendar extends AppCompatActivity {
     TextView monthText;
     MonthAdapter adt;
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
-    int c;
 
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User.java 를 통해 데이터베이스 접근
@@ -52,18 +51,15 @@ public class ViewCalendar extends AppCompatActivity {
 
         //할일 listview로 설정한다.
         ListView todo_list = (ListView) findViewById(R.id.todo_list);
-
-        //그리드 셀 클릭 시 스케줄 추가 버튼으로 넘어가게 설정
+        
+        //그리드뷰 각 item 클릭마다 position 출력
         monthView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MonthItem item = (MonthItem)adt.getItem(position);   // 해당 아이템 가져옴
-                //년, 월, 일 받게 설정 - 명시적으로 보여주기위해 토스트 메시지로 띄운 것 나중에 삭제해야됨
-                //adt.curYear (년) / adt.curMonth (월) / item.getDay() (일)
-                Toast.makeText(getApplicationContext(), adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일" , Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(),CheckDetail.class);
+                Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
                 startActivity(intent);
+                Toast.makeText(getApplicationContext(), "position: " + position, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -74,8 +70,6 @@ public class ViewCalendar extends AppCompatActivity {
                 adt.setPreviousMonth();
                 adt.notifyDataSetChanged(); //어댑터 데이터 갱신하고 뷰 다시 뿌리기
                 setMonthText();
-                c = adt.getCurMonth()+1;
-                Toast.makeText(getApplicationContext(),"월 : "+ c,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -86,8 +80,6 @@ public class ViewCalendar extends AppCompatActivity {
                 adt.setNextMonth();
                 adt.notifyDataSetChanged(); //어댑터 데이터 갱신하고 뷰 다시 뿌리기
                 setMonthText();
-                c = adt.getCurMonth()+1;
-                Toast.makeText(getApplicationContext(),"월 : "+ c,Toast.LENGTH_SHORT).show();
             }
         });
     }
