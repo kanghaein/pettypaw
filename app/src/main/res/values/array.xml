@@ -24,4 +24,11 @@
         <item>1</item>
     </string-array>
 
+    <string-array name="petname">
+        <item>선택</item>
+        <item>해피</item>
+        <item>두부</item>
+        <item>뭉치</item>
+    </string-array>
+
 </resources>
