@@ -16,6 +16,7 @@ public class MonthAdapter extends BaseAdapter {
 
     Context mContext;
 
+
     MonthItem[] items;
     int curYear;
     int curMonth;
@@ -96,13 +97,12 @@ public class MonthAdapter extends BaseAdapter {
     }
 
     @Override
+
     public long getItemId(int position) {
         return 0;
     }
 
-    public int getCurYear(){
-        return curYear;
-    }
+    public int getCurYear(){ return curYear; }
 
     public int getCurMonth(){
         return curMonth;

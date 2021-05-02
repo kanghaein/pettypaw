@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -35,6 +36,8 @@ public class enrollment1 extends AppCompatActivity {
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
     final DatabaseReference UserDB = mDatabase.getReference("User");
 
+    public static Context context_enrollment1;
+
     // MainActivity 에서 가져온 lg_ID 라는 변수 이용 => 로그인한 ID를 부모로 펫정보 입력
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
 
@@ -43,6 +46,8 @@ public class enrollment1 extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enrollment1);
+
+        context_enrollment1 = this;
 
         et_name = findViewById(R.id.et_name);
         et_age = findViewById(R.id.et_age);
