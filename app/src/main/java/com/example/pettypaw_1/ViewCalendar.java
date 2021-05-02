@@ -1,11 +1,13 @@
 package com.example.pettypaw_1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -21,13 +23,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 public class ViewCalendar extends AppCompatActivity {
+
+    public static Context context_view;
+
 
     GridView monthView;
     TextView monthText;
     MonthAdapter adt;
+
+
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
     int c;
+
 
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User.java 를 통해 데이터베이스 접근
@@ -35,10 +48,15 @@ public class ViewCalendar extends AppCompatActivity {
     // Uer_pet.java 를 통해 데이터베이스 접근
     final DatabaseReference GroupDB = mDatabase.getReference("Group");
 
+    final DatabaseReference petDB = mDatabase.getReference("User_pet");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_calendar);
+
+        context_view = this;
+
 
         monthView = findViewById(R.id.monthView); //그리드뷰 객체 참조
         adt = new MonthAdapter(this); //어댑터 객체 생성
@@ -53,18 +71,30 @@ public class ViewCalendar extends AppCompatActivity {
         //할일 listview로 설정한다.
         ListView todo_list = (ListView) findViewById(R.id.todo_list);
 
+
         //그리드 셀 클릭 시 스케줄 추가 버튼으로 넘어가게 설정
         monthView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MonthItem item = (MonthItem)adt.getItem(position);   // 해당 아이템 가져옴
+
+                Integer[] array = new Integer[3];
+                array[0] = adt.curYear;
+                array[1] = adt.curMonth+1;
+                array[2] = item.getDay();
+
+                String current_date = Arrays.toString(array);
+                Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
+                intent.putExtra("click_day", current_date);
+
+                startActivity(intent);
+
                 //년, 월, 일 받게 설정 - 명시적으로 보여주기위해 토스트 메시지로 띄운 것 나중에 삭제해야됨
                 //adt.curYear (년) / adt.curMonth (월) / item.getDay() (일)
-                Toast.makeText(getApplicationContext(), adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일" , Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(),CheckDetail.class);
-                startActivity(intent);
+//                Toast.makeText(getApplicationContext(), adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일" , Toast.LENGTH_LONG).show();
+
             }
+
         });
 
         // 뒤로가기 버튼 이벤트 리스너 설정
