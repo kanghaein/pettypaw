@@ -30,6 +30,7 @@ public class GroupManagement extends AppCompatActivity {
 
     Button btn_search, btn_exit;
     SearchView searchView;
+    String user_invite;
 
     // 리스트뷰와 리스트를 담기위한 배열을 객체 선언
     private ListView search_list;
@@ -110,10 +111,23 @@ public class GroupManagement extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                // (User -> User List -> 선택된 리스트의 유저 ID) 에게 자식으로 invited 라는 값과 초대한 자신의 ID 값을 준다
-                                User_list user_list = new User_list("invited", getUserID);
-                                UserDB.child("User List").child(Array.get(position).toString()).setValue(user_list);
-                                finish();
+                                // 초대하고자 하는 사람의 Invite 라는 노드의 값을 얻어와 문자열로 저장
+                                user_invite = snapshot.child("User List").child(Array.get(position).toString()).child("Invite").getValue().toString();
+
+                                // 초대하고자 하는 사람이 이미 다른 그룹에 속해있다면
+                                if(user_invite.equals("invited")){
+                                    Toast.makeText(GroupManagement.this, "이미 그룹에 속한 회원입니다", Toast.LENGTH_SHORT).show();
+                                }
+                                // 초대하고자 하는 사람이 다른 그룹의 리더라면
+                                else if(user_invite.equals("Leader")){
+                                    Toast.makeText(GroupManagement.this, "이미 그룹에 속한 회원입니다", Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    // (User -> User List -> 선택된 리스트의 유저 ID) 에게 자식으로 invited 라는 값과 초대한 자신의 ID 값을 준다
+                                    User_list user_list = new User_list("invited", getUserID);
+                                    UserDB.child("User List").child(Array.get(position).toString()).setValue(user_list);
+                                    finish();
+                                }
                             }
 
                             @Override

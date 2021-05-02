@@ -25,8 +25,9 @@ public class pet_list extends AppCompatActivity {
 
     Button btn_enroll;
     String name;
+    String LeaderID;
 
-    // MainActivity 에서 가져온 lg_ID 라는 변수 이용 => 로그인한 ID를 부모로 펫정보 입력
+    // MainActivity 에서 가져온 lg_ID 라는 변수 이용 => 로그인한 ID 값을 이용
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
 
     // 리스트뷰와 리스트를 담기위한 배열을 객체 선언
@@ -38,6 +39,7 @@ public class pet_list extends AppCompatActivity {
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User_pet.java 를 통해 데이터베이스 접근
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
+    final DatabaseReference UserDB = mDatabase.getReference("User");
 
     // 다른 액티비티에서 접근 가능
     public static Context context_pet_list;
@@ -59,26 +61,38 @@ public class pet_list extends AppCompatActivity {
         enrolled_pet_list.setAdapter(adapter);
 
 
-        petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
+        // (User -> User List -> 로그인한 ID -> Leader_ID) 의 값은 같은 그룹에 속한 사람들이라면
+        // 모두 리더의 ID로 통일되어 같으므로 이것을 그룹내 공유를 위한 키값으로 사용.
+        // 그 키값이 아래의 LeaderID 라는 변수
+        UserDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // 자식이 있는 수만큼 반복
-                for(DataSnapshot ds : snapshot.getChildren()) {
+                LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
+                petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // 리스트 출력. 자식이 있는 수만큼 반복
+                        for(DataSnapshot ds : snapshot.getChildren()) {
 
-                    name = ds.getValue().toString();
-                    Array.add(name);
-                    adapter.add(name);
+                            name = ds.getValue().toString();
+                            Array.add(name);
+                            adapter.add(name);
 
-                }
-                adapter.notifyDataSetChanged();
-                enrolled_pet_list.setSelection(adapter.getCount() - 1);
+                        }
+                        adapter.notifyDataSetChanged();
+                        enrolled_pet_list.setSelection(adapter.getCount() - 1);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
 
         // 리스트 누르면 해당 동물 편집화면으로
         enrolled_pet_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

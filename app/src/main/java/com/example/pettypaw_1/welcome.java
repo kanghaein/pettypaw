@@ -40,20 +40,6 @@ public class welcome extends AppCompatActivity {
         btn_leader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // 리더버튼을 누르면 User -> User List 의 자식노드에 리더로 등록된다
-                        User_list user_list = new User_list("Leader", getUserID);
-                        UserDB.child("User List").child(getUserID).setValue(user_list);
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
                 Intent intent = new Intent(getApplicationContext(), enrollment.class);
                 startActivity(intent);
             }
