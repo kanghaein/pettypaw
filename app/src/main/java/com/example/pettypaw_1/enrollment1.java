@@ -34,6 +34,7 @@ public class enrollment1 extends AppCompatActivity {
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User_pet.java 를 통해 데이터베이스 접근
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
+    final DatabaseReference UserDB = mDatabase.getReference("User");
 
     public static Context context_enrollment1;
 
@@ -94,6 +95,21 @@ public class enrollment1 extends AppCompatActivity {
 
                             // 설정 => 반려동물 등록/편집 에서의 리스트 출력을 위한 애완동물 리스트 데이터 입력
                             petDB.child(getUserID).child("Pet List").child(getPetName).setValue(getPetName);
+
+                            // 첫 반려동물 등록을 완료하면 User -> User List 의 자식노드에 리더로 등록된다
+                            UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    User_list user_list = new User_list("Leader", getUserID);
+                                    UserDB.child("User List").child(getUserID).setValue(user_list);
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
 
                             Toast.makeText(enrollment1.this, "등록 완료", Toast.LENGTH_SHORT).show();
                             finish();

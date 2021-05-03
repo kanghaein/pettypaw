@@ -34,7 +34,7 @@ public class RequestAdapter extends BaseAdapter{
     final DatabaseReference UserDB = mDatabase1.getReference("User");
 
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
-    String getUserName = ((RequestInvitation)RequestInvitation.context_RequestInvitation).UserName;
+    String getLeaderID = ((RequestInvitation)RequestInvitation.context_RequestInvitation).UserName;
 
     // 아이템을 세트로 담기 위한 Array
     private ArrayList<Request_item> mItems = new ArrayList<>();
@@ -78,7 +78,7 @@ public class RequestAdapter extends BaseAdapter{
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         // Group DB 에 리더와 멤버 저장. 멤버는 리더의 자식노드
-                        GroupDB.child(getUserName).child(getUserID).setValue(getUserID);
+                        GroupDB.child(getLeaderID).child(getUserID).setValue(getUserID);
 
                     }
 
@@ -88,6 +88,29 @@ public class RequestAdapter extends BaseAdapter{
                     }
                 });
                 context.startActivity(new Intent(context, ViewCalendar.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+        });
+
+        // 리스트 안의 거절버튼
+        Button deny_button = (Button) convertView.findViewById(R.id.deny_button);
+        deny_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // (User List -> 자신의 노드) 에 저장된 값들을 모두 null 로 변경
+                        User_list user_list = new User_list("null", "null");
+                        UserDB.child("User List").child(getUserID).setValue(user_list);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                context.startActivity(new Intent(context, welcome.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
 
