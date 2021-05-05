@@ -33,8 +33,6 @@ public class AddSchedule extends AppCompatActivity {
     EditText et_ds; //상세일정 입력
     Button et_button;
 
-    String Pname;
-    List<Object> Plist = new ArrayList<>(); //Pet List 이름 받아오기 위한 배열
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -54,9 +52,11 @@ public class AddSchedule extends AppCompatActivity {
         et_ds = findViewById(R.id.et_ds);
         et_button = findViewById(R.id.et_button);
 
+        User_event event = new User_event(); //날짜, 상세일정 저장하는 User_event 객체
+        User_pet pet = new User_pet(); //스피너에서 펫 이름 받아올 User_pet 객체
+
         Intent intent = getIntent();
         String clickDay = intent.getStringExtra("click_day");
-        Toast.makeText(getApplicationContext(), clickDay, Toast.LENGTH_SHORT).show();
 
 
         petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
@@ -86,38 +86,9 @@ public class AddSchedule extends AppCompatActivity {
         //선택된 강아지
         spinner.setSelection(Adapter.NO_SELECTION, true);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            Boolean first = true;
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(first){
-                    first = false;
-                }
-                else {
-                    String Name = spinner.getItemAtPosition(position).toString(); //스피너의 강아지 이름 string으로
-
-                    petDB.child(getUserID).child("Pet List").addListenerForSingleValueEvent(new ValueEventListener() { //Pet List로 접근해서 값을 읽는데
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                            for(DataSnapshot ds : snapshot.getChildren()) { //Pet List에 담긴 child 개수만큼
-                                Pname = ds.getValue().toString(); //값을 string으로 변환
-                                Plist.add(Pname);
-                            }
-
-                            if(parent.getItemAtPosition(position).toString().equals(Plist.get(position).toString())){ //스피너string이랑 Pet List string이랑 일치하면
-                                eventDB.child(getUserID).child(Name).child("date").push().setValue(clickDay); //Pet List하위에 스피너string 하위에 clickDay 등록
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-
-
+                    pet.Pet_Name = spinner.getItemAtPosition(position).toString(); //강아지 이름을 스피너에서 받아옴
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -125,11 +96,38 @@ public class AddSchedule extends AppCompatActivity {
             }
         });
 
-
         et_button.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View v){
+                eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String getDetail = et_ds.getText().toString();
+
+                        //상세일정 입력 칸이 비어있다면
+                        if(getDetail.equals("")) {
+                            Toast.makeText(AddSchedule.this, "상세일정을 입력해주세요", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            event.Date = clickDay;
+                            event.Detail = getDetail;
+
+                            eventDB.child(getUserID).child(pet.Pet_Name).push().setValue(event); //User_event하위에 event 등록
+
+                            Toast.makeText(AddSchedule.this, "등록 완료", Toast.LENGTH_SHORT).show();
+                            finish();
+
+                            Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
 
             }
 

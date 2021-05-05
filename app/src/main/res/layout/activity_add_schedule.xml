@@ -40,7 +40,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="200dp">
 
         <TextView
             android:text="상세 일정"
@@ -53,7 +53,7 @@
             android:id="@+id/et_ds"
             android:textSize="20sp"
             android:gravity="top"
-            android:text="  내용을 입력해주세요."
+            android:text=""
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
