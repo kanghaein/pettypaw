@@ -23,11 +23,6 @@ public class CheckDetail extends AppCompatActivity {
 
     Button btn_pre, btn_as;
 
-    int year = ((ViewCalendar)ViewCalendar.context_view).adt.curYear;
-    int month = ((ViewCalendar)ViewCalendar.context_view).adt.curMonth+1;
-
-//    String name = ((enrollment1)enrollment1.context_enrollment1).et_name.getText().toString();
-
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User_pet.java 를 통해 데이터베이스 접근
@@ -59,23 +54,6 @@ public class CheckDetail extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-
-                petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-//                        Date date = new Date(year, month);
-
-//                        petDB.child(getUserID).child("Pet List").setValue(date);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-
                 Intent intent = new Intent(getApplicationContext(), AddSchedule.class);
                 intent.putExtra("click_day", clickDay);
                 startActivity(intent);

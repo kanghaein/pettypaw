@@ -39,7 +39,7 @@ public class ViewCalendar extends AppCompatActivity {
 
 
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
-    int c;
+    //int c;
 
 
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -89,10 +89,6 @@ public class ViewCalendar extends AppCompatActivity {
 
                 startActivity(intent);
 
-                //년, 월, 일 받게 설정 - 명시적으로 보여주기위해 토스트 메시지로 띄운 것 나중에 삭제해야됨
-                //adt.curYear (년) / adt.curMonth (월) / item.getDay() (일)
-//                Toast.makeText(getApplicationContext(), adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일" , Toast.LENGTH_LONG).show();
-
             }
 
         });
@@ -104,8 +100,8 @@ public class ViewCalendar extends AppCompatActivity {
                 adt.setPreviousMonth();
                 adt.notifyDataSetChanged(); //어댑터 데이터 갱신하고 뷰 다시 뿌리기
                 setMonthText();
-                c = adt.getCurMonth()+1;
-                Toast.makeText(getApplicationContext(),"월 : "+ c,Toast.LENGTH_SHORT).show();
+                //c = adt.getCurMonth()+1;
+                //Toast.makeText(getApplicationContext(),"월 : "+ c,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -116,8 +112,8 @@ public class ViewCalendar extends AppCompatActivity {
                 adt.setNextMonth();
                 adt.notifyDataSetChanged(); //어댑터 데이터 갱신하고 뷰 다시 뿌리기
                 setMonthText();
-                c = adt.getCurMonth()+1;
-                Toast.makeText(getApplicationContext(),"월 : "+ c,Toast.LENGTH_SHORT).show();
+                //c = adt.getCurMonth()+1;
+                //Toast.makeText(getApplicationContext(),"월 : "+ c,Toast.LENGTH_SHORT).show();
             }
         });
     }
