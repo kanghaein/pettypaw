@@ -3,6 +3,7 @@ package com.example.pettypaw_1;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,11 @@ public class ViewCalendar extends AppCompatActivity {
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
     //int c;
 
+    //Intent intent = getIntent();
+
+    //Integer[] array = new Integer[3];
+    ArrayList<String> test = new ArrayList<>();
+
 
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User.java 를 통해 데이터베이스 접근
@@ -78,14 +84,27 @@ public class ViewCalendar extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MonthItem item = (MonthItem)adt.getItem(position);   // 해당 아이템 가져옴
 
-                Integer[] array = new Integer[3];
-                array[0] = adt.curYear;
-                array[1] = adt.curMonth+1;
-                array[2] = item.getDay();
 
-                String current_date = Arrays.toString(array);
+                //array[0] = adt.curYear;
+                //array[1] = adt.curMonth+1;
+                //array[2] = item.getDay();
+
+                //String current_date = Arrays.toString(array);
+                String year = Integer.toString(adt.curYear);
+                String month = Integer.toString((adt.curMonth)+1);
+                String day = Integer.toString(item.getDay());
+
+                test.add(year);
+                test.add(month);
+                test.add(day);
+
+                String Join = TextUtils.join(" ", test);
+
+
                 Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
-                intent.putExtra("click_day", current_date);
+                intent.putExtra("click_day", Join);
+                intent.putExtra("date",adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일");
+
 
                 startActivity(intent);
 
