@@ -8,8 +8,10 @@ public class User {
 
     }
 
+
     public User(String ID, String PW) {
         this.ID = ID;
         this.PW = PW;
     }
+
 }

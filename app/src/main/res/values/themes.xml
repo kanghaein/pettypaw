@@ -18,6 +18,7 @@
         <item name="android:editTextStyle">@style/bmjuaEditText</item>
         <item name="android:radioButtonStyle">@style/bmjuaRadioButton</item>
         <item name="android:checkboxStyle">@style/bmjuaCheckBox</item>
+        <item name="android:fontFamily">@font/bmjua</item>
     </style>
 
 

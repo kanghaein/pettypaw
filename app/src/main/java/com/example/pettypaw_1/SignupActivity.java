@@ -7,30 +7,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-// id중복확인, 입력창 비었을 때의 이벤트,... 필요
-
 public class SignupActivity extends AppCompatActivity {
+
 
     // 레이아웃들의 id값들 선언
     EditText sign_ID, sign_PW, sign_PW_check;
-    Button btn_back, btn_complete,btn_dc;
+    Button btn_back, btn_complete, btn_dc;
 
-    // DatabaseReference 가져오기
-    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +39,13 @@ public class SignupActivity extends AppCompatActivity {
         btn_back = findViewById(R.id.btn_back);
         btn_dc = findViewById(R.id.btn_dc);
 
-        // 파이어베이스 연동
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        readUser();
+        // 파이어베이스 연동
+        final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        // User.java 를 통해 데이터베이스 접근
+        final DatabaseReference userDB = mDatabase.getReference("User");
+
+
 
         // 비밀번호 일치 확인 검사 작업
         sign_PW_check.addTextChangedListener(new TextWatcher(){
@@ -67,39 +64,101 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+
+        // 중복확인 버튼
         btn_dc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String getUserId = sign_ID.getText().toString();
+
+                userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onClick(View view) {
-                        //sign ID 랑 파이어베이스에 있는 데이터랑 겹치지 않으면,
-                        Toast.makeText(getApplicationContext(),"사용하실 수 있습니다.",Toast.LENGTH_SHORT).show();
-                        //sign ID 랑 파이어베이스에 있는 데이터랑 겹치면,
-                        //Toast.makeText(getApplicationContext(),"사용중인 아이디입니다.",Toast.LENGTH_SHORT).show();
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // 아이디 입력창이 비어있다면
+                        if (getUserId.equals("")){
+                            Toast.makeText(SignupActivity.this, "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
+                        }
+                        //sign ID 랑 파이어베이스에 있는 데이터랑 겹치면
+                        else if (snapshot.child(getUserId).exists()) {
+
+                            Toast.makeText(SignupActivity.this, "이미 사용중인 ID 입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        //sign ID 랑 파이어베이스에 있는 데이터랑 겹치지 않으면
+                        else{
+                            Toast.makeText(SignupActivity.this, "사용하실 수 있는 ID 입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
+            }
+        });
+
 
         // 가입완료 버튼
         btn_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // 버튼을 누르면 아래 작업 실행
+
                 String getUserId = sign_ID.getText().toString();
                 String getUserPw = sign_PW.getText().toString();
                 String getUserPwCheck = sign_PW_check.getText().toString();
 
                 // 비밀번호와 비밀번호확인이 일치하지 않는다면
                 if(!getUserPw.equals(getUserPwCheck)){
-                    Toast.makeText(com.example.pettypaw_1.SignupActivity.this, "PW가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignupActivity.this, "PW가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
+                }
+                // 입력창들의 공백처리
+                else if (getUserId.equals("") || getUserPw.equals("") || getUserPwCheck.equals("")){
+                    Toast.makeText(SignupActivity.this, "ID 혹은 PW 를 입력해주세요", Toast.LENGTH_SHORT).show();
+                }
+                // 비밀번호와 비밀번호 확인이 일치한다면 DB에 데이터 저장
+                else {
+                    // addListenerForSingleValueEvent 를 이용한 데이터 읽기
+                    userDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            if (snapshot.child(getUserId).exists()) {
+                                Toast.makeText(SignupActivity.this, "ID 혹은 PW 를 확인해주세요", Toast.LENGTH_SHORT).show();
+
+                            }
+                            else {
+                                User user = new User(getUserId, getUserPw);
+                                User_list user_list = new User_list("null", "null");
+
+                                // 입력한 정보를 DB의 (User -> 자신의 ID) 노드의 자식으로 저장
+                                userDB.child(getUserId).setValue(user);
+
+                                // 또한 (User -> User List -> 자신의 ID) 에 리더정보, 초대여부 를 초기 null 값으로 저장
+                                userDB.child("User List").child(getUserId).setValue(user_list);
+
+                                Toast.makeText(SignupActivity.this, "가입이 완료되었습니다", Toast.LENGTH_SHORT).show();
+                                finish();
+
+                                //회원가입 완료시 MainActivity 로 이동
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
 
-                // 비밀번호와 비밀번호 확인이 일치한다면
-                else if(getUserPw.equals(getUserPwCheck)) {
-                    writeNewData("1", getUserId, getUserPw); // DB에 데이터 쓰기
 
-                    Intent intent = new Intent(getApplicationContext(),enrollment.class);
-                    startActivity(intent);
 
-                }
             }
         });
+
 
         // 취소 버튼
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -111,50 +170,9 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    private void writeNewData(String userId, String ID, String PW) {
-        // User 파일에 데이터 전달
-        User user = new User(ID, PW);
-
-        mDatabase.child("users").child(userId).setValue(user)
-                // 완료 리스너
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(com.example.pettypaw_1.SignupActivity.this, "가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(com.example.pettypaw_1.SignupActivity.this, "ID 혹은 PW를 확인해주세요", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-
-    private void readUser(){
-        // User 파일에 전달받은 데이터를 기반으로 DB에 데이터 쓰기
-        mDatabase.child("users").child("1").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue(User.class) != null){
-                    User post = dataSnapshot.getValue(User.class);
-                    Log.w("FireBaseData", "getData" + post.toString());
-                } else {
-                    Toast.makeText(com.example.pettypaw_1.SignupActivity.this, "데이터 없음...", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            //업데이트 해야함
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.w("FireBaseData", "loadPost:onCancelled", databaseError.toException());
-            }
-        });
-    }
 }
+
+
+
+
 

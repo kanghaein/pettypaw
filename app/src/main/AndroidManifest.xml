@@ -3,6 +3,7 @@
     package="com.example.pettypaw_1">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -11,12 +12,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pettypaw_1">
+        <activity android:name=".RequestInvitation"/>
+        <activity android:name=".AddSchedule" />
+        <activity android:name=".AlarmSetting" />
+        <activity android:name=".MemberSetting" />
+        <activity android:name=".LeaderSetting" />
+        <activity android:name=".pet_list" />
+        <activity android:name=".PetEdit" />
+        <activity android:name=".PetAdditionalEnroll" />
+        <activity android:name=".GroupManagement" />
+        <activity android:name=".CurrentCalendar" />
+        <activity android:name=".ViewCalendar">
+
+        </activity>
+        <activity android:name=".CheckDetail" />
 
         <activity
             android:name=".SignupActivity"
             android:label="회원가입"
-            android:theme="@style/Theme.Pettypaw_1">
-        </activity>
+            android:theme="@style/Theme.Pettypaw_1" />
 
         <activity
             android:name=".MainActivity"
@@ -24,15 +38,18 @@
             android:theme="@style/Theme.Pettypaw_1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".welcome"></activity>
-        <activity android:name=".enrollment"></activity>
-        <activity android:name=".enrollment1"></activity>
-        <activity android:name=".calendar"></activity>
+        <activity android:name=".welcome"
+            android:label="환영합니다"
+            android:theme="@style/Theme.Pettypaw_1"/>
+
+        <activity android:name=".enrollment" />
+        <activity android:name=".enrollment1" />
+
+        <activity android:name=".Preference" />
 
     </application>
 

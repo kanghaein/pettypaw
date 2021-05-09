@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="Push Alarm on/off">
+
+        <SwitchPreference
+            android:title="푸시 알람"
+            android:key="pushAlarm"
+            android:defaultValue="true"
+            android:summary="설정한 시간 전에 알림 받기" />
+
+        <ListPreference
+            android:title="시간 설정"
+            android:key="alarm"
+            android:entries="@array/alarmlist"
+            android:entryValues="@array/alarmlist_value"
+            android:dependency="pushAlarm"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

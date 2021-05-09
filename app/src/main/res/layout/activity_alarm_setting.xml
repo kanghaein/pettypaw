@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알림설정"
+            android:textSize="40sp"
+            android:layout_weight="1"
+            android:layout_marginTop="80dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TimePicker
+
+            android:id="@+id/tp_timepicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="#000000"
+            android:onClick="regist"
+            android:text="등록" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:onClick="unregist"
+            android:text="해지"
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="30dp">
+
+        <CheckBox
+            android:id="@+id/cb_sun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일요일" />
+
+        <CheckBox
+            android:id="@+id/cb_mon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="월요일" />
+
+        <CheckBox
+            android:id="@+id/cb_tue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="화요일" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <CheckBox
+            android:id="@+id/cb_wed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수요일" />
+
+        <CheckBox
+            android:id="@+id/cb_thu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="목요일" />
+
+        <CheckBox
+            android:id="@+id/cb_fri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="금요일" />
+
+        <CheckBox
+            android:id="@+id/cb_sat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="토요일"
+             />
+
+    </LinearLayout>
+
+
+</LinearLayout>
