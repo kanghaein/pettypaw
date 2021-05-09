@@ -87,7 +87,23 @@ public class RequestAdapter extends BaseAdapter{
 
                     }
                 });
-                context.startActivity(new Intent(context, ViewCalendar.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
+                // 수락버튼을 누르면 Member 가 됨
+                UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User_list user_list = new User_list("Member", getLeaderID);
+                        UserDB.child("User List").child(getUserID).setValue(user_list);
+
+                        context.startActivity(new Intent(context, ViewCalendar.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
         });
 

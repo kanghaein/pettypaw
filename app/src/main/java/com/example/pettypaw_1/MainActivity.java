@@ -84,11 +84,6 @@ public class MainActivity extends AppCompatActivity {
         final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         // User.java 를 통해 데이터베이스 접근
         final DatabaseReference userDB = mDatabase.getReference("User");
-        // Uer_pet.java 를 통해 데이터베이스 접근
-        final DatabaseReference petDB = mDatabase.getReference("User_pet");
-        // Group.java 를 통해 데이터베이스 접근
-        final DatabaseReference GroupDB = mDatabase.getReference("Group");
-
 
         // 로그인 버튼
         btn_login.setOnClickListener(new View.OnClickListener() {
@@ -108,56 +103,30 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            // 현재 로그인하려는 유저가 그룹에 가입되어 있다면 리더이름으로 GroupDB 탐색
-                            String leader_name = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
-
                             // DB의 child 에 입력한 ID가 존재한다면
                             if (snapshot.child(getUserID).exists()) {
                                 // User.java 를 통해 해당 child 의 ID 와 PW 값을 얻어오고
-                                User user = snapshot.child(getUserID).getValue(User.class);
+                                String myPW = snapshot.child(getUserID).child("PW").getValue().toString();
                                 // 얻어온 PW와 입력된 PW가 일치한다면
-                                if ((user.PW).equals(getUserPW)) {
-                                    petDB.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            // 이미 반려동물을 등록한 기존 유저라면 바로 캘린더로 이동
-                                            if (snapshot.child(getUserID).exists()) {
-                                                Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
-                                                startActivity(intent);
-                                                finish();
-                                            }
-                                            else {
-                                                GroupDB.addValueEventListener(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                                        // 리더 휘하의 그룹 멤버로 가입된 유저라면 바로 캘린더로 이동
-                                                        if (snapshot.child(leader_name).child(getUserID).exists()) {
-                                                            Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
-                                                            startActivity(intent);
-                                                        }
-                                                        // 리더도 아니고 그룹에도 속하지 않은 신규유저라면 welcome 창으로 이동
-                                                        else {
-                                                            Intent intent = new Intent(getApplicationContext(), welcome.class);
-                                                            startActivity(intent);
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });
-                                            }
+                                if (myPW.equals(getUserPW)) {
+                                    // 이미 그룹장인 기존 유저라면 바로 캘린더로 이동
+                                    if (snapshot.child("User List").child(getUserID).child("Invite").getValue().toString().equals("Leader")) {
+                                        Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                    else {
+                                        // 리더 휘하의 그룹 멤버로 가입된 유저라면 바로 캘린더로 이동
+                                        if (snapshot.child("User List").child(getUserID).child("Invite").getValue().toString().equals("Member")) {
+                                            Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
+                                            startActivity(intent);
                                         }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
+                                        // 리더도 아니고 그룹에도 속하지 않은 신규유저라면 welcome 창으로 이동
+                                        else {
+                                            Intent intent = new Intent(getApplicationContext(), welcome.class);
+                                            startActivity(intent);
                                         }
-                                    });
-
-
+                                    }
                                 }
                                 else {
                                     Toast.makeText(MainActivity.this, "ID 혹은 PW 가 옳지 않습니다", Toast.LENGTH_SHORT).show();
