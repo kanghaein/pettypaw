@@ -87,6 +87,7 @@ public class RequestAdapter extends BaseAdapter{
 
                     }
                 });
+<<<<<<< HEAD
 
                 // 수락버튼을 누르면 Member 가 됨
                 UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,6 +105,9 @@ public class RequestAdapter extends BaseAdapter{
                     }
                 });
 
+=======
+                context.startActivity(new Intent(context, ViewCalendar.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
             }
         });
 

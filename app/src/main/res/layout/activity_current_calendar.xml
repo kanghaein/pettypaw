@@ -30,7 +30,11 @@
         android:layout_marginTop="30dp">
 
         <EditText
+<<<<<<< HEAD
             android:id="@+id/textLeaderID"
+=======
+            android:id="@+id/editTextTextPersonName"
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -63,7 +67,10 @@
             android:layout_gravity="center"/>
 
         <ListView
+<<<<<<< HEAD
             android:id="@+id/enroll_pet_list"
+=======
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
             android:layout_width="match_parent"
             android:layout_height="150dp" />
 
@@ -84,7 +91,10 @@
             android:layout_gravity="center" />
 
         <ListView
+<<<<<<< HEAD
             android:id="@+id/sharing_member_list"
+=======
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
             android:layout_width="match_parent"
             android:layout_height="150dp" />
 

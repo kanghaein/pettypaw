@@ -1,5 +1,6 @@
 package com.example.pettypaw_1;
 
+<<<<<<< HEAD
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -59,10 +60,19 @@ public class CurrentCalendar extends AppCompatActivity {
 
 
 
+=======
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+
+public class CurrentCalendar extends AppCompatActivity {
+
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_calendar);
+<<<<<<< HEAD
 
         context_view = this;
         T_LeaderID = (EditText) findViewById(R.id.textLeaderID);
@@ -200,4 +210,7 @@ public class CurrentCalendar extends AppCompatActivity {
 
 
 
+=======
+    }
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
 }

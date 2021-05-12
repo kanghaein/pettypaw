@@ -13,7 +13,11 @@
             android:text="강아지 이름"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:textSize="30dp"/>
+=======
+            android:textSize="20dp"/>
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -20,12 +20,21 @@
             android:textSize="20sp"/>
 
         <TextView
+<<<<<<< HEAD
             android:gravity="center"
             android:text="상세 보기"
             android:textSize="40sp"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
+=======
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="상세 보기"
+            android:textSize="40sp" />
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
 
         <Button
             android:id="@+id/btn_as"
@@ -47,7 +56,11 @@
             android:id="@+id/tv_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:textSize="40dp"
+=======
+            android:textSize="20dp"
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
             android:gravity="center" />
 
         <androidx.recyclerview.widget.RecyclerView

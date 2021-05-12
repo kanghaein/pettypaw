@@ -33,6 +33,10 @@ public class ViewCalendar extends AppCompatActivity {
 
     public static Context context_view;
 
+<<<<<<< HEAD
+=======
+    ArrayList<String> test = new ArrayList<>();
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
 
     GridView monthView;
     TextView monthText;
@@ -42,12 +46,15 @@ public class ViewCalendar extends AppCompatActivity {
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
     //int c;
 
+<<<<<<< HEAD
     //Intent intent = getIntent();
 
     //Integer[] array = new Integer[3];
     //ArrayList<String> test = new ArrayList<>();
     String[] arrDay = new String[3]; // 날짜를 담기 위한 배열 선언 (년/월/일)이므로 3개의 공간 필요
 
+=======
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
 
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User.java 를 통해 데이터베이스 접근
@@ -75,26 +82,44 @@ public class ViewCalendar extends AppCompatActivity {
         Button monthPrevious = findViewById(R.id.monthPrevious);
         Button monthNext = findViewById(R.id.monthNext);
 
+<<<<<<< HEAD
         //할일 listview로 설정한다.
         ListView todo_list = (ListView) findViewById(R.id.todo_list);
 
 
+=======
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
         //그리드 셀 클릭 시 스케줄 추가 버튼으로 넘어가게 설정
         monthView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MonthItem item = (MonthItem)adt.getItem(position);   // 해당 아이템 가져옴
 
+<<<<<<< HEAD
 
                 //array[0] = adt.curYear;
                 //array[1] = adt.curMonth+1;
                 //array[2] = item.getDay();
 
                 //String current_date = Arrays.toString(array);
+=======
+                /*
+                Integer[] array = new Integer[3];
+                array[0] = adt.curYear;
+                array[1] = adt.curMonth+1;
+                array[2] = item.getDay();
+                String current_date = Arrays.toString(array);
+                Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
+                intent.putExtra("click_day", current_date);
+                intent.putExtra("date",adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일");
+                */
+
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
                 String year = Integer.toString(adt.curYear);
                 String month = Integer.toString((adt.curMonth)+1);
                 String day = Integer.toString(item.getDay());
 
+<<<<<<< HEAD
                 //test.add(year);
                 //test.add(month);
                 //test.add(day);
@@ -109,6 +134,15 @@ public class ViewCalendar extends AppCompatActivity {
                 intent.putExtra("click_day", arrDay);
                 intent.putExtra("date",adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일");
 
+=======
+                test.add(year);
+                test.add(month);
+                test.add(day);
+
+                String Join = TextUtils.join(" ", test);
+                Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
+                intent.putExtra("click_day", Join);
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
                 startActivity(intent);
 
             }

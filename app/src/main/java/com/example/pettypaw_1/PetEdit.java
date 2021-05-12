@@ -31,7 +31,10 @@ public class PetEdit extends AppCompatActivity {
     String getPetGender; // 애완동물 성별 값을 전달받을 변수
     Spinner spinner;
     String LeaderID;
+<<<<<<< HEAD
     String Color;
+=======
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -102,6 +105,7 @@ public class PetEdit extends AppCompatActivity {
                                 if(getPetName.equals("") || getPetAge.equals("")) {
                                     Toast.makeText(PetEdit.this, "정보를 입력해주세요", Toast.LENGTH_SHORT).show();
                                 }
+<<<<<<< HEAD
                                 else {
                                     // 자신이 속한 그룹의 "Pet Information" 이하 자식들에 대해 모두 한번씩 반복한다. (반려동물 색상 중복체크)
                                     for(DataSnapshot ds : snapshot.child(LeaderID).child("Pet Information").getChildren()) {
@@ -140,6 +144,29 @@ public class PetEdit extends AppCompatActivity {
                                         startActivity(intent);
                                     }
                                 }
+=======
+                                else{
+                                    User_pet pet = new User_pet(getPetName, getPetAge, getPetGender, getColor);
+
+                                    // 반려동물 편집기능을 위한 기존노드 null 처리 후 새로운 노드 추가
+                                    // name 은 pet_list.java 로부터 전송(intent)받은 터치(선택)한 반려동물의 이름
+                                    // 선택한 이름의 반려동물을 Pet Information 에서 삭제하고 입력한 반려동물 이름으로 정보 입력
+                                    petDB.child(LeaderID).child("Pet Information").child(name).setValue(null);
+                                    petDB.child(LeaderID).child("Pet Information").child(getPetName).setValue(pet);
+
+                                    // 설정 => 반려동물 등록/편집 에서의 리스트 출력을 위한 애완동물 리스트 데이터 입력
+                                    // 선택한 이름의 반려동물을 Pet List 에서 삭제하고 입력한 반려동물 이름으로 리스트 추가
+                                    petDB.child(LeaderID).child("Pet List").child(name).setValue(null);
+                                    petDB.child(LeaderID).child("Pet List").child(getPetName).setValue(getPetName);
+
+                                    Toast.makeText(PetEdit.this, "수정 완료", Toast.LENGTH_SHORT).show();
+                                    finish();
+
+                                    Intent intent = new Intent(getApplicationContext(), pet_list.class);
+                                    startActivity(intent);
+                                }
+
+>>>>>>> a3b78231dee788dba5e94af3caafb54c4473526a
                             }
 
                             @Override
