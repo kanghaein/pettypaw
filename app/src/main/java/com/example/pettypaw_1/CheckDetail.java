@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -37,6 +38,8 @@ public class CheckDetail extends AppCompatActivity {
     TextView tv_date;
     String detail;
 
+    List<Object> Array = new ArrayList<Object>();
+
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User_pet.java 를 통해 데이터베이스 접근
@@ -48,6 +51,7 @@ public class CheckDetail extends AppCompatActivity {
 
     User_event event = new User_event(); //날짜, 상세일정 저장하는 User_event 객체
     User_pet pet = new User_pet(); //스피너에서 펫 이름 받아올 User_pet 객체
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +97,57 @@ public class CheckDetail extends AppCompatActivity {
         });
 
 
-        eventDB.child(getUserID).child("dog1").addValueEventListener(new ValueEventListener() {
+        /*
+        //User_pet에서
+        petDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
+                petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // 리스트 출력. 자식이 있는 수만큼 반복
+                        for(DataSnapshot ds : snapshot.getChildren()) {
+
+                            String name = ds.getValue().toString();
+                            Array.add(name);
+
+                        }
+                        eventDB.child(getUserID).setValue(name);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+         */
+
+        //강아지 이름으로 배열 만들어서
+        eventDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final List<String> petName = new ArrayList<String>(); //이름 담을 array
+                for (DataSnapshot nameSnapshot: snapshot.getChildren()){ //강아지 담긴 수만큼 받아와서 array에 넣기
+                    String data = nameSnapshot.getValue().toString();
+                    petName.add(data);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        /*
+
+        eventDB.child(getUserID).child(data).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child(clickDay).exists()) {
@@ -104,8 +158,6 @@ public class CheckDetail extends AppCompatActivity {
 
                     RecyclerView recyclerView = findViewById(R.id.recyclerView);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-
                     RecycleAdapter adapter = new RecycleAdapter(list);
                     recyclerView.setAdapter(adapter);
                 }
@@ -123,6 +175,8 @@ public class CheckDetail extends AppCompatActivity {
             }
 
         });
+
+         */
 
 
 
