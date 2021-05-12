@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ public class CheckDetail extends AppCompatActivity {
 
     Button btn_pre, btn_as;
     TextView tv_date;
+    String detail;
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -41,8 +43,8 @@ public class CheckDetail extends AppCompatActivity {
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
     // User_event.java를 통해 데이터베이스 접근
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
-
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+
 
     User_event event = new User_event(); //날짜, 상세일정 저장하는 User_event 객체
     User_pet pet = new User_pet(); //스피너에서 펫 이름 받아올 User_pet 객체
@@ -56,10 +58,13 @@ public class CheckDetail extends AppCompatActivity {
         btn_as = findViewById(R.id.btn_as);
         tv_date = findViewById(R.id.tv_date);
 
-
+        // ViewCalendar 액티비티로부터 전송받음
         Intent intent = getIntent();
-        String clickDay = intent.getStringExtra("click_day");
+        String[] Day = intent.getStringArrayExtra("click_day");
         String date = intent.getStringExtra("date");
+
+        // 전송받은 배열의 각 인덱스의 값들에 띄어쓰기로 이어붙여 하나의 문자열로 만든다
+        String clickDay = TextUtils.join(" ", Day);
 
         tv_date.setText(date);
 
@@ -87,17 +92,41 @@ public class CheckDetail extends AppCompatActivity {
 
         });
 
-        ArrayList<String> list = new ArrayList<>();
-        for (int i=0; i<5; i++){
-            list.add(String.format("TEST %d", i));
-        }
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        eventDB.child(getUserID).child("dog1").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child(clickDay).exists()) {
+                    ArrayList<String> list = new ArrayList<>();
+                    String detail = snapshot.child(clickDay).child("Detail").getValue().toString();
+
+                    list.add(String.format(detail));
+
+                    RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
 
-        RecycleAdapter adapter = new RecycleAdapter(list);
-        recyclerView.setAdapter(adapter);
+                    RecycleAdapter adapter = new RecycleAdapter(list);
+                    recyclerView.setAdapter(adapter);
+                }
+                else{
+                    Toast.makeText(CheckDetail.this, "일정이 없습니다", Toast.LENGTH_SHORT).show();
+                }
+
+
+
+           }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
+
+
+
 
 
     }

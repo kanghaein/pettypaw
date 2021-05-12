@@ -45,7 +45,8 @@ public class ViewCalendar extends AppCompatActivity {
     //Intent intent = getIntent();
 
     //Integer[] array = new Integer[3];
-    ArrayList<String> test = new ArrayList<>();
+    //ArrayList<String> test = new ArrayList<>();
+    String[] arrDay = new String[3]; // 날짜를 담기 위한 배열 선언 (년/월/일)이므로 3개의 공간 필요
 
 
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -94,17 +95,19 @@ public class ViewCalendar extends AppCompatActivity {
                 String month = Integer.toString((adt.curMonth)+1);
                 String day = Integer.toString(item.getDay());
 
-                test.add(year);
-                test.add(month);
-                test.add(day);
+                //test.add(year);
+                //test.add(month);
+                //test.add(day);
 
-                String Join = TextUtils.join(" ", test);
+                // 각 index에 날짜 값을 담는다
+                arrDay[0] = year;
+                arrDay[1] = month;
+                arrDay[2] = day;
 
-
+                // CheckDetail 액티비티에 날짜 값들을 전송
                 Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
-                intent.putExtra("click_day", Join);
+                intent.putExtra("click_day", arrDay);
                 intent.putExtra("date",adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일");
-
 
                 startActivity(intent);
 
