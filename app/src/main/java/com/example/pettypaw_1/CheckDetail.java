@@ -97,57 +97,7 @@ public class CheckDetail extends AppCompatActivity {
         });
 
 
-        /*
-        //User_pet에서
-        petDB.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
-                petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // 리스트 출력. 자식이 있는 수만큼 반복
-                        for(DataSnapshot ds : snapshot.getChildren()) {
-
-                            String name = ds.getValue().toString();
-                            Array.add(name);
-
-                        }
-                        eventDB.child(getUserID).setValue(name);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-         */
-
-        //강아지 이름으로 배열 만들어서
-        eventDB.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final List<String> petName = new ArrayList<String>(); //이름 담을 array
-                for (DataSnapshot nameSnapshot: snapshot.getChildren()){ //강아지 담긴 수만큼 받아와서 array에 넣기
-                    String data = nameSnapshot.getValue().toString();
-                    petName.add(data);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        /*
-
-        eventDB.child(getUserID).child(data).addValueEventListener(new ValueEventListener() {
+        eventDB.child(getUserID).child("dog1").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.child(clickDay).exists()) {
@@ -176,7 +126,6 @@ public class CheckDetail extends AppCompatActivity {
 
         });
 
-         */
 
 
 
