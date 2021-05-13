@@ -14,15 +14,15 @@ import java.util.ArrayList;
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
 
-    private ArrayList<String> Data = null;
+    private ArrayList<Recycler_item> Data = null;
 
     //아이템 뷰를 저장하는 뷰홀더 클래스
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView1, dogName;
         CheckBox feed_checked, walk_checked;
 
-        ViewHolder(View view){
-            super(view);
+        ViewHolder(View itemView){
+            super(itemView);
 
             //뷰 객체에 대한 참조
             textView1 = itemView.findViewById(R.id.textView);
@@ -35,7 +35,8 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
         }
     }
 
-    RecycleAdapter(ArrayList<String> list){
+    RecycleAdapter(ArrayList<Recycler_item> list){
+
         Data = list;
     }
 
@@ -60,8 +61,9 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     //어떤 데이터를 아이템뷰에 표시할 것인지는 position값 참조
     @Override
     public void onBindViewHolder(RecycleAdapter.ViewHolder holder, int position){
-        String pos = Data.get(position);
-        holder.textView1.setText(pos);
+        Recycler_item item = Data.get(position);
+        holder.dogName.setText(item.getPetName());
+        holder.textView1.setText(item.getDetail());
     }
 
     //어댑터에서 관리하는 아이템의 개수를 반환

@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -36,9 +35,6 @@ public class CheckDetail extends AppCompatActivity {
 
     Button btn_pre, btn_as;
     TextView tv_date;
-    String detail;
-
-    List<Object> Array = new ArrayList<Object>();
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -46,12 +42,14 @@ public class CheckDetail extends AppCompatActivity {
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
     // User_event.java를 통해 데이터베이스 접근
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
-    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
 
 
     User_event event = new User_event(); //날짜, 상세일정 저장하는 User_event 객체
     User_pet pet = new User_pet(); //스피너에서 펫 이름 받아올 User_pet 객체
 
+    // 상세보기의 일정리스트 출력을 위한 리사이클러뷰 리스트 생성
+    ArrayList<Recycler_item> list = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,8 +62,8 @@ public class CheckDetail extends AppCompatActivity {
 
         // ViewCalendar 액티비티로부터 전송받음
         Intent intent = getIntent();
-        String[] Day = intent.getStringArrayExtra("click_day");
-        String date = intent.getStringExtra("date");
+        String[] Day = intent.getStringArrayExtra("click_day"); // "YYYY MM DD"
+        String date = intent.getStringExtra("date"); // "YYYY년 MM월 DD일"
 
         // 전송받은 배열의 각 인덱스의 값들에 띄어쓰기로 이어붙여 하나의 문자열로 만든다
         String clickDay = TextUtils.join(" ", Day);
@@ -73,9 +71,9 @@ public class CheckDetail extends AppCompatActivity {
         tv_date.setText(date);
 
         //뒤로가기 버튼
-        btn_pre.setOnClickListener(new View.OnClickListener(){
+        btn_pre.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 onBackPressed();
             }
         });
@@ -96,42 +94,55 @@ public class CheckDetail extends AppCompatActivity {
 
         });
 
-
-        eventDB.child(getUserID).child("dog1").addValueEventListener(new ValueEventListener() {
+        // 상세보기에 일정리스트 띄우기, Pet List 를 이용하기 위한 petDB 접근
+        petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child(clickDay).exists()) {
-                    ArrayList<String> list = new ArrayList<>();
-                    String detail = snapshot.child(clickDay).child("Detail").getValue().toString();
+                // 자신이 등록한 반려동물의 수만큼 반복
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String pet_name = ds.getValue().toString();
 
-                    list.add(String.format(detail));
+                    // 상세일정을 불러오기 위한 eventDB 접근
+                    eventDB.child(getUserID).child(pet_name).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // DB상에 클릭한 날짜에 해당하는 노드가 존재한다면
+                            if (snapshot.child(clickDay).exists()) {
+                                String detail = snapshot.child(clickDay).child("Detail").getValue().toString();
 
-                    RecyclerView recyclerView = findViewById(R.id.recyclerView);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    RecycleAdapter adapter = new RecycleAdapter(list);
-                    recyclerView.setAdapter(adapter);
+                                addItem(pet_name, detail);
+
+                                RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+
+                                RecycleAdapter adapter = new RecycleAdapter(list);
+                                recyclerView.setAdapter(adapter);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+
+                    });
                 }
-                else{
-                    Toast.makeText(CheckDetail.this, "일정이 없습니다", Toast.LENGTH_SHORT).show();
-                }
-
-
-
-           }
-
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
         });
-
-
-
-
-
-
-
     }
 
+    // 리사이클러뷰의 각각의 item 에 따로 데이터를 저장하기 위한 함수
+    public void addItem(String petName, String detail) {
+        Recycler_item item = new Recycler_item();
+
+        item.setPetName(petName);
+        item.setDetail(detail);
+
+        list.add(item);
+    }
 }
