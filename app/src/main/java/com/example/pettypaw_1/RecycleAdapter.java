@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView1, dogName;
         CheckBox feed_checked, walk_checked;
+        ImageView colorimage;
 
         ViewHolder(View itemView){
             super(itemView);
@@ -29,6 +31,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
             feed_checked = itemView.findViewById(R.id.feed_checked);
             walk_checked = itemView.findViewById(R.id.walk_checked);
             dogName = itemView.findViewById(R.id.dogName);
+            colorimage = itemView.findViewById(R.id.colorimage);
 
             //int pos = getAdapterPosition(); //어댑터 내 아이템의 위치
             //if(pos != RecyclerView.NO_POSITION);
@@ -64,6 +67,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
         Recycler_item item = Data.get(position);
         holder.dogName.setText(item.getPetName());
         holder.textView1.setText(item.getDetail());
+        holder.colorimage.setImageDrawable(item.getIcon());
     }
 
     //어댑터에서 관리하는 아이템의 개수를 반환

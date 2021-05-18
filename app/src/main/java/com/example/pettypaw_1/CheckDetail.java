@@ -3,6 +3,7 @@ package com.example.pettypaw_1;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,9 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,13 +99,21 @@ public class CheckDetail extends AppCompatActivity {
 
         });
 
+
         // 상세보기에 일정리스트 띄우기, Pet List 를 이용하기 위한 petDB 접근
         petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                //기존 리스트가 존재하지 않게 초기화
+                list.clear();
+
                 // 자신이 등록한 반려동물의 수만큼 반복
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     String pet_name = ds.getValue().toString();
+
+                    Drawable drawable = getDrawable(R.drawable.paw).mutate();
+
 
                     // 상세일정을 불러오기 위한 eventDB 접근
                     eventDB.child(getUserID).child(pet_name).addValueEventListener(new ValueEventListener() {
@@ -110,16 +123,64 @@ public class CheckDetail extends AppCompatActivity {
                             if (snapshot.child(clickDay).exists()) {
                                 String detail = snapshot.child(clickDay).child("Detail").getValue().toString();
 
-                                addItem(pet_name, detail);
+                                addItem(pet_name, detail, drawable);
+
+
+                                petDB.child(getUserID).child("Pet Information").child(pet_name).child("Color").addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        String color = snapshot.getValue().toString();
+
+                                        switch (color) {
+                                            case "빨강색":
+                                                drawable.setColorFilter(Color.parseColor("#FF0000"), PorterDuff.Mode.SRC_IN);
+                                                break;
+                                            case "주황색":
+                                                drawable.setColorFilter(Color.parseColor("#FF9800"), PorterDuff.Mode.SRC_IN);
+                                                break;
+                                            case "노랑색":
+                                                drawable.setColorFilter(Color.parseColor("#FFEB3B"), PorterDuff.Mode.SRC_IN);
+                                                break;
+                                            case "초록색":
+                                                drawable.setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_IN);
+                                                break;
+                                            case "파랑색":
+                                                drawable.setColorFilter(Color.parseColor("#03A9F4"), PorterDuff.Mode.SRC_IN);
+                                                break;
+                                            case "남색":
+                                                drawable.setColorFilter(Color.parseColor("#00106A"), PorterDuff.Mode.SRC_IN);
+                                                break;
+                                            case "보라색":
+                                                drawable.setColorFilter(Color.parseColor("#E448FF"), PorterDuff.Mode.SRC_IN);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
 
                                 RecyclerView recyclerView = findViewById(R.id.recyclerView);
                                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-
                                 RecycleAdapter adapter = new RecycleAdapter(list);
+
+                                //리스트 저장 및 새로고침하여 반영
+                                adapter.notifyDataSetChanged();
+
                                 recyclerView.setAdapter(adapter);
+
                             }
+
+
                         }
+
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -127,22 +188,31 @@ public class CheckDetail extends AppCompatActivity {
                         }
 
                     });
+
+
                 }
+
+
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
     }
 
     // 리사이클러뷰의 각각의 item 에 따로 데이터를 저장하기 위한 함수
-    public void addItem(String petName, String detail) {
+    public void addItem(String petName, String detail, Drawable icon) {
         Recycler_item item = new Recycler_item();
 
         item.setPetName(petName);
         item.setDetail(detail);
+        item.setIcon(icon);
+
 
         list.add(item);
     }
+
 }
