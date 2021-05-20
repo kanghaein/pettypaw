@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +41,12 @@ import java.util.List;
 public class CheckDetail extends AppCompatActivity {
 
     Button btn_pre, btn_as;
+    CheckBox Feed, Walk;
     TextView tv_date;
+    String[] Day;
+    String date;
+    String clickDay;
+
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -49,6 +56,7 @@ public class CheckDetail extends AppCompatActivity {
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
     String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
 
+    public static Context context_CheckDetail;
 
     User_event event = new User_event(); //날짜, 상세일정 저장하는 User_event 객체
     User_pet pet = new User_pet(); //스피너에서 펫 이름 받아올 User_pet 객체
@@ -61,8 +69,12 @@ public class CheckDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_detail);
 
+        context_CheckDetail = this;
+
         btn_pre = findViewById(R.id.btn_pre);
         btn_as = findViewById(R.id.btn_as);
+        Feed = (CheckBox) findViewById(R.id.feed_checked);
+        Walk = (CheckBox) findViewById(R.id.walk_checked);
         tv_date = findViewById(R.id.tv_date);
 
         // ViewCalendar 액티비티로부터 전송받음
@@ -71,7 +83,7 @@ public class CheckDetail extends AppCompatActivity {
         String date = intent.getStringExtra("date"); // "YYYY년 MM월 DD일"
 
         // 전송받은 배열의 각 인덱스의 값들에 띄어쓰기로 이어붙여 하나의 문자열로 만든다
-        String clickDay = TextUtils.join("", Day);
+        clickDay = TextUtils.join("", Day);
 
         tv_date.setText(date);
 
@@ -99,7 +111,7 @@ public class CheckDetail extends AppCompatActivity {
 
         });
 
-
+        // 리사이클러뷰 item 들의 모든 이벤트
         // 상세보기에 일정리스트 띄우기, Pet List 를 이용하기 위한 petDB 접근
         petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
             @Override
@@ -121,11 +133,42 @@ public class CheckDetail extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             // DB상에 클릭한 날짜에 해당하는 노드가 존재한다면
                             if (snapshot.child(clickDay).exists()) {
+
                                 String detail = snapshot.child(clickDay).child("Detail").getValue().toString();
 
-                                addItem(pet_name, detail, drawable);
+                                // 액티비티에 접근하면 체크박스의 저장된 상태를 불러오기 위한 if문
+                                // 클릭한 날짜의 자식으로 Feed 와 Walk 가 둘 다 존재한다면
+                                if (snapshot.child(clickDay).child("Feed").exists() && snapshot.child(clickDay).child("Walk").exists()) {
+                                    String feed_check = snapshot.child(clickDay).child("Feed").getValue().toString();
+                                    String walk_check = snapshot.child(clickDay).child("Walk").getValue().toString();
+                                    // Feed 와 Walk 가 둘 다 "checked" 상태라면 펫이름, 상세일정 입력 후 모든 체크박스 체크한다
+                                    if (feed_check.equals("checked") && walk_check.equals("checked")) {
+                                        addItem(pet_name, detail, true, true, drawable);
+                                    }
+                                }
+                                // 클릭한 날짜의 자식으로 Feed 만 존재한다면
+                                else if (snapshot.child(clickDay).child("Feed").exists()) {
+                                    String feed_check = snapshot.child(clickDay).child("Feed").getValue().toString();
+                                    // Feed 의 상태가 "checked"라면 펫이름, 상세일정 입력 후 Feed 만 체크한다
+                                    if (feed_check.equals("checked")) {
+                                        addItem(pet_name, detail, true, false, drawable);
+                                    }
+                                }
+                                // 클릭한 날짜의 자식으로 Walk 만 존재한다면
+                                else if (snapshot.child(clickDay).child("Walk").exists()) {
+                                    String walk_check = snapshot.child(clickDay).child("Walk").getValue().toString();
+                                    // Walk 의 상태가 "checked"라면 펫이름, 상세일정 입력 후 Walk 만 체크한다
+                                    if (walk_check.equals("checked")) {
+                                        addItem(pet_name, detail, false, true, drawable);
+                                    }
+                                }
+                                // 클릭한 날짜의 자식으로 Detail 만 존재한다면
+                                else {
+                                    // 펫이름, 상세일정 입력 후 모든 체크박스를 비활성화 한다
+                                    addItem(pet_name, detail, false, false, drawable);
+                                }
 
-
+                                // 반려동물 색상
                                 petDB.child(getUserID).child("Pet Information").child(pet_name).child("Color").addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -204,15 +247,19 @@ public class CheckDetail extends AppCompatActivity {
     }
 
     // 리사이클러뷰의 각각의 item 에 따로 데이터를 저장하기 위한 함수
-    public void addItem(String petName, String detail, Drawable icon) {
+    public void addItem(String petName, String detail, boolean feed, boolean walk, Drawable icon) {
         Recycler_item item = new Recycler_item();
 
         item.setPetName(petName);
         item.setDetail(detail);
+        item.setSelected_feed(feed);
+        item.setSelected_walk(walk);
         item.setIcon(icon);
 
 
         list.add(item);
     }
+
+
 
 }

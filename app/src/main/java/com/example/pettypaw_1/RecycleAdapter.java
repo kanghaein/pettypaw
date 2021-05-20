@@ -1,27 +1,52 @@
 package com.example.pettypaw_1;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import static com.example.pettypaw_1.CheckDetail.context_CheckDetail;
 
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
 
     private ArrayList<Recycler_item> Data = null;
 
+
+    // 파이어베이스 연동
+    final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    // User_pet.java 를 통해 데이터베이스 접근
+    final DatabaseReference petDB = mDatabase.getReference("User_pet");
+    // User_event.java를 통해 데이터베이스 접근
+    final DatabaseReference eventDB = mDatabase.getReference("User_event");
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
+    String getDay = ((CheckDetail) context_CheckDetail).clickDay;
+
     //아이템 뷰를 저장하는 뷰홀더 클래스
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView1, dogName;
         CheckBox feed_checked, walk_checked;
         ImageView colorimage;
+
 
         ViewHolder(View itemView){
             super(itemView);
@@ -32,6 +57,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
             walk_checked = itemView.findViewById(R.id.walk_checked);
             dogName = itemView.findViewById(R.id.dogName);
             colorimage = itemView.findViewById(R.id.colorimage);
+
 
             //int pos = getAdapterPosition(); //어댑터 내 아이템의 위치
             //if(pos != RecyclerView.NO_POSITION);
@@ -64,10 +90,90 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     //어떤 데이터를 아이템뷰에 표시할 것인지는 position값 참조
     @Override
     public void onBindViewHolder(RecycleAdapter.ViewHolder holder, int position){
-        Recycler_item item = Data.get(position);
+        final Recycler_item item = Data.get(position);
+
         holder.dogName.setText(item.getPetName());
         holder.textView1.setText(item.getDetail());
         holder.colorimage.setImageDrawable(item.getIcon());
+
+        // 밥 체크박스 클릭 이벤트
+        holder.feed_checked.setOnCheckedChangeListener(null);
+        holder.feed_checked.setChecked(item.getSelected_feed());
+        holder.feed_checked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                holder.feed_checked.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                // 체크박스를 체크한다면
+                                if(holder.feed_checked.isChecked()) {
+                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Feed").setValue("checked");
+
+                                }
+                                // 체크박스를 해제한다면
+                                else{
+                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+
+                        });
+                    }
+                });
+                item.setSelected_feed(isChecked);
+            }
+        });
+
+        // 산책 체크박스 클릭 이벤트
+        holder.walk_checked.setOnCheckedChangeListener(null);
+        holder.walk_checked.setChecked(item.getSelected_walk());
+        holder.walk_checked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                holder.walk_checked.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                // 체크박스를 체크한다면
+                                if(holder.walk_checked.isChecked()) {
+                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Walk").setValue("checked");
+
+                                }
+                                // 체크박스를 해제한다면
+                                else{
+                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Walk").setValue(null);
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+
+                        });
+
+                    }
+                });
+                item.setSelected_walk(isChecked);
+            }
+        });
+
+
     }
 
     //어댑터에서 관리하는 아이템의 개수를 반환
@@ -76,6 +182,10 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
         return Data.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
 }
 
