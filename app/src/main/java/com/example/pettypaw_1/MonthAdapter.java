@@ -2,21 +2,48 @@ package com.example.pettypaw_1;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.renderscript.Sampler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.Spinner;
 
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.installations.Utils;
 
 import java.util.Calendar;
 
 public class MonthAdapter extends BaseAdapter {
-    Calendar cal;
 
+    Calendar cal;
     Context mContext;
 
+    final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    // User.java 를 통해 데이터베이스 접근
+    final DatabaseReference userDB = mDatabase.getReference("User");
+    // Uer_pet.java 를 통해 데이터베이스 접근
+    final DatabaseReference eventDB = mDatabase.getReference("User_event");
+
+    final DatabaseReference petDB = mDatabase.getReference("User_pet");
+
+    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
 
     MonthItem[] items;
     int curYear;
@@ -42,6 +69,7 @@ public class MonthAdapter extends BaseAdapter {
     }
 
     public void calculate(){
+
         for(int i=0; i<items.length; i++){ //items[] 모든 값 0으로 초기화
             items[i] = new MonthItem(0);
         }
@@ -81,11 +109,65 @@ public class MonthAdapter extends BaseAdapter {
         MonthItemView view = new MonthItemView(mContext);
         MonthItem item = items[position];
 
-        view.setItem(item); //날짜 값이 0이면 ""으로, 아니면 날짜값으로 TextView의 Text 지정
+        //각각의 뷰 아이템의 년,월,일 지정
+        String[] arrDay = new String[3];
+        //각 index에 날짜 값을 담는다.
+        arrDay[0] = String.valueOf(curYear);
+        arrDay[1] = String.valueOf(curMonth+1);
+        arrDay[2] = String.valueOf(item.getDay());
 
-        if(position%7==0){ //일요일은 날짜 색 빨간색으로
-            view.setTextColor(Color.RED);
-        }
+        //Join으로 배열 묶어준다.
+        String ymd = TextUtils.join("",arrDay);
+
+        //View의 Id값을 지정하기 위해서 String값을 integer로 변환한 후 Id지정
+        int ymd_integer = Integer.parseInt(ymd);
+        view.setId(ymd_integer);
+        String ymd_id = String.valueOf(view.getId());
+
+        //파이어베이스 등록된 날짜와 그리드 뷰의 아이템 아이디 값과 같으면 lens_24를 백그라운드로 설정하여 일정이 있다는 것을 한눈에 알아볼 수 있게
+        petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds : snapshot.getChildren()){
+                    String pet_name= ds.getValue().toString();
+
+                    eventDB.child(getUserID).child(pet_name).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.child(ymd_id).exists()){
+                                    view.setBackgroundColor(Color.GRAY);
+                                    /**********일정 표시 디자인 부분**********/
+                                    //view.setBackgroundResource(R.drawable.ic_baseline_lens_24);
+                                    view.setItem(item);
+
+                                    if(position%7==0){ //일요일은 날짜 색 빨간색으로
+                                        view.setTextColor(Color.RED);
+                                    }
+
+                                } else{
+                                    view.setItem(item);
+
+                                    if(position%7==0){ //일요일은 날짜 색 빨간색으로
+                                        view.setTextColor(Color.RED);
+                                    }
+                                }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         GridView.LayoutParams params = new GridView.LayoutParams( GridView.LayoutParams.MATCH_PARENT,150);
         view.setLayoutParams(params);
@@ -104,7 +186,9 @@ public class MonthAdapter extends BaseAdapter {
         return 0;
     }
 
-    public int getCurYear(){ return curYear; }
+    public int getCurYear() {
+        return curYear;
+    }
 
     public int getCurMonth(){
         return curMonth;

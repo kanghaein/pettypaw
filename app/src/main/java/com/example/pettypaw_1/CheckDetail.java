@@ -71,7 +71,7 @@ public class CheckDetail extends AppCompatActivity {
         String date = intent.getStringExtra("date"); // "YYYY년 MM월 DD일"
 
         // 전송받은 배열의 각 인덱스의 값들에 띄어쓰기로 이어붙여 하나의 문자열로 만든다
-        String clickDay = TextUtils.join(" ", Day);
+        String clickDay = TextUtils.join("", Day);
 
         tv_date.setText(date);
 
