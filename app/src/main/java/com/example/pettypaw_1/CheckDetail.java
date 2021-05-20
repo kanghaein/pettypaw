@@ -181,7 +181,6 @@ public class CheckDetail extends AppCompatActivity {
 
                         }
 
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 
@@ -210,7 +209,6 @@ public class CheckDetail extends AppCompatActivity {
         item.setPetName(petName);
         item.setDetail(detail);
         item.setIcon(icon);
-
 
         list.add(item);
     }
