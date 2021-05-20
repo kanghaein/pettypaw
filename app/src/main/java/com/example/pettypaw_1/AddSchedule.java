@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AddSchedule extends AppCompatActivity {
@@ -55,8 +56,10 @@ public class AddSchedule extends AppCompatActivity {
         User_event event = new User_event(); //날짜, 상세일정 저장하는 User_event 객체
         User_pet pet = new User_pet(); //스피너에서 펫 이름 받아올 User_pet 객체
 
+
         Intent intent = getIntent();
         String Join = intent.getStringExtra("click_day");
+        //ArrayList Id = intent.getParcelableArrayListExtra("id_key");
 
 
         petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
@@ -74,6 +77,7 @@ public class AddSchedule extends AppCompatActivity {
 
                 nameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(nameAdapter); //어댑터에 연결
+
             }
 
             @Override
@@ -87,7 +91,7 @@ public class AddSchedule extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    pet.Pet_Name = spinner.getItemAtPosition(position).toString(); //강아지 이름을 스피너에서 받아옴
+                pet.Pet_Name = spinner.getItemAtPosition(position).toString(); //강아지 이름을 스피너에서 받아옴
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -108,15 +112,14 @@ public class AddSchedule extends AppCompatActivity {
                             Toast.makeText(AddSchedule.this, "상세일정을 입력해주세요", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            event.Date = Join;
                             event.Detail = getDetail;
 
-                            eventDB.child(getUserID).child(pet.Pet_Name).child(Join).child("Detail").setValue(event.Detail);
+                            eventDB.child(getUserID).child(pet.Pet_Name).child(Join).child("Detail").setValue(event.Detail); //User_event하위에 event 등록
 
                             Toast.makeText(AddSchedule.this, "등록 완료", Toast.LENGTH_SHORT).show();
                             finish();
 
-                            Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
+                            Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
                             startActivity(intent);
                         }
                     }

@@ -2,6 +2,7 @@ package com.example.pettypaw_1;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class MonthAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         MonthItemView view = new MonthItemView(mContext);
         MonthItem item = items[position];
+
         view.setItem(item); //날짜 값이 0이면 ""으로, 아니면 날짜값으로 TextView의 Text 지정
 
         if(position%7==0){ //일요일은 날짜 색 빨간색으로

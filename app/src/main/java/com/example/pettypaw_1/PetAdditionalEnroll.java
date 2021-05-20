@@ -29,6 +29,7 @@ public class PetAdditionalEnroll extends AppCompatActivity {
     String getPetGender; // 애완동물 성별 값을 전달받을 변수
     Spinner spinner;
     String LeaderID;
+    String Color;
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -90,24 +91,43 @@ public class PetAdditionalEnroll extends AppCompatActivity {
                         petDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                                 // 반려동물의 이름과 나이가 비어있다면
                                 if(getPetName.equals("") || getPetAge.equals("")) {
                                     Toast.makeText(PetAdditionalEnroll.this, "정보를 입력해주세요", Toast.LENGTH_SHORT).show();
                                 }
-                                else{
-                                    User_pet pet = new User_pet(getPetName, getPetAge, getPetGender, getColor);
+                                else {
+                                    // 자신이 속한 그룹의 "Pet Information" 이하 자식들에 대해 모두 한번씩 반복한다. (반려동물 색상 중복체크)
+                                    for(DataSnapshot ds : snapshot.child(LeaderID).child("Pet Information").getChildren()) {
 
-                                    // 애완동물 데이터 입력, LeaderID 이용
-                                    petDB.child(LeaderID).child("Pet Information").child(getPetName).setValue(pet);
+                                        // "Pet Information" 이하 자식들 중에서도 "Color" 라는 자식이 가지는 값을 문자열로 받아와 Color 라는 변수에 저장
+                                        Color = ds.child("Color").getValue().toString();
 
-                                    // 설정 => 반려동물 등록/편집 에서의 리스트 출력을 위한 애완동물 리스트 데이터 입력
-                                    petDB.child(LeaderID).child("Pet List").child(getPetName).setValue(getPetName);
+                                        // 만약 입력한 색과 받아온 색의 값이 같다면
+                                        if(getColor.equals(Color)){
+                                            Toast.makeText(PetAdditionalEnroll.this, "이미 사용중인 색상입니다", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        }
+                                    }
 
-                                    Toast.makeText(PetAdditionalEnroll.this, "등록 완료", Toast.LENGTH_SHORT).show();
-                                    finish();
+                                    // break 를 걸었으므로 반복문이 끝나고 색깔이 중복되었으면 변수 Color는 입력한 색과 동일한 값이다
+                                    // 색이 중복되지 않았으면 변수 Color는 입력한 색과 다른 값이므로 이것을 조건으로 추가등록 구현
+                                    if(!getColor.equals(Color)) {
 
-                                    Intent intent = new Intent(getApplicationContext(), pet_list.class);
-                                    startActivity(intent);
+                                        User_pet pet = new User_pet(getPetName, getPetAge, getPetGender, getColor);
+
+                                        // 애완동물 데이터 입력, LeaderID 이용
+                                        petDB.child(LeaderID).child("Pet Information").child(getPetName).setValue(pet);
+
+                                        // 설정 => 반려동물 등록/편집 에서의 리스트 출력을 위한 애완동물 리스트 데이터 입력
+                                        petDB.child(LeaderID).child("Pet List").child(getPetName).setValue(getPetName);
+
+                                        Toast.makeText(PetAdditionalEnroll.this, "등록 완료", Toast.LENGTH_SHORT).show();
+                                        finish();
+
+                                        Intent intent = new Intent(getApplicationContext(), pet_list.class);
+                                        startActivity(intent);
+                                    }
                                 }
 
                             }

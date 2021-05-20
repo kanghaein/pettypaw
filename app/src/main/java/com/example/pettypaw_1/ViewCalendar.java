@@ -33,7 +33,6 @@ public class ViewCalendar extends AppCompatActivity {
 
     public static Context context_view;
 
-    ArrayList<String> test = new ArrayList<>();
 
     GridView monthView;
     TextView monthText;
@@ -42,6 +41,12 @@ public class ViewCalendar extends AppCompatActivity {
 
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
     //int c;
+
+    //Intent intent = getIntent();
+
+    //Integer[] array = new Integer[3];
+    //ArrayList<String> test = new ArrayList<>();
+    String[] arrDay = new String[3]; // 날짜를 담기 위한 배열 선언 (년/월/일)이므로 3개의 공간 필요
 
 
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -70,34 +75,40 @@ public class ViewCalendar extends AppCompatActivity {
         Button monthPrevious = findViewById(R.id.monthPrevious);
         Button monthNext = findViewById(R.id.monthNext);
 
+        //할일 listview로 설정한다.
+        ListView todo_list = (ListView) findViewById(R.id.todo_list);
+
+
         //그리드 셀 클릭 시 스케줄 추가 버튼으로 넘어가게 설정
         monthView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MonthItem item = (MonthItem)adt.getItem(position);   // 해당 아이템 가져옴
 
-                /*
-                Integer[] array = new Integer[3];
-                array[0] = adt.curYear;
-                array[1] = adt.curMonth+1;
-                array[2] = item.getDay();
-                String current_date = Arrays.toString(array);
-                Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
-                intent.putExtra("click_day", current_date);
-                intent.putExtra("date",adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일");
-                */
 
+                //array[0] = adt.curYear;
+                //array[1] = adt.curMonth+1;
+                //array[2] = item.getDay();
+
+                //String current_date = Arrays.toString(array);
                 String year = Integer.toString(adt.curYear);
                 String month = Integer.toString((adt.curMonth)+1);
                 String day = Integer.toString(item.getDay());
 
-                test.add(year);
-                test.add(month);
-                test.add(day);
+                //test.add(year);
+                //test.add(month);
+                //test.add(day);
 
-                String Join = TextUtils.join(" ", test);
+                // 각 index에 날짜 값을 담는다
+                arrDay[0] = year;
+                arrDay[1] = month;
+                arrDay[2] = day;
+
+                // CheckDetail 액티비티에 날짜 값들을 전송
                 Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
-                intent.putExtra("click_day", Join);
+                intent.putExtra("click_day", arrDay);
+                intent.putExtra("date",adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일");
+
                 startActivity(intent);
 
             }
