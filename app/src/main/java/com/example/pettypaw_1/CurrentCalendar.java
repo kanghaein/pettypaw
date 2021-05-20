@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
 public class CurrentCalendar extends AppCompatActivity {
 
     Button btn_back;
@@ -47,7 +45,7 @@ public class CurrentCalendar extends AppCompatActivity {
     List<Object> Array_m = new ArrayList<Object>();
 
     // MainActivity 에서 가져온 lg_ID 라는 변수 이용 => 로그인한 ID 값을 이용
-    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -56,7 +54,6 @@ public class CurrentCalendar extends AppCompatActivity {
     // User.java 를 통해 데이터베이스 접근
     final DatabaseReference UserDB = mDatabase.getReference("User");
     final DatabaseReference GroupDB = mDatabase.getReference("Group");
-
 
 
     @Override
@@ -100,7 +97,7 @@ public class CurrentCalendar extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         // 리스트 출력. 자식이 있는 수만큼 반복
-                        for(DataSnapshot ds : snapshot.getChildren()) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
 
                             name = ds.getValue().toString();
                             Array_p.add(name);
@@ -110,12 +107,14 @@ public class CurrentCalendar extends AppCompatActivity {
                         adapter_p.notifyDataSetChanged();
                         enroll_pet_list.setSelection(adapter_p.getCount() - 1);
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -170,34 +169,11 @@ public class CurrentCalendar extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        String Invite = snapshot.child("User List").child(getUserID).child("Invite").getValue().toString();
-                        // 유저가 리더-> LeaderSetting 으로 이동
-                        if (Invite.equals("Leader")) {
-                            Intent intent = new Intent(getApplicationContext(), LeaderSetting.class);
-                            startActivity(intent);
-                        }
-                        // 유저가 멤버 -> MemberSetting 으로 이동
-                        else{
-                            Intent intent = new Intent(getApplicationContext(), MemberSetting.class);
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                onBackPressed();
             }
         });
 
     }
-
-
 
 
 }

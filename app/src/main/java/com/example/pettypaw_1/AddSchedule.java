@@ -33,6 +33,7 @@ public class AddSchedule extends AppCompatActivity {
 
     EditText et_ds; //상세일정 입력
     Button et_button;
+    String LeaderID;
 
 
     // 파이어베이스 연동
@@ -41,8 +42,9 @@ public class AddSchedule extends AppCompatActivity {
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
     // User_event.java를 통해 데이터베이스 접근
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
+    final DatabaseReference UserDB = mDatabase.getReference("User");
 
-    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,22 +64,34 @@ public class AddSchedule extends AppCompatActivity {
         //ArrayList Id = intent.getParcelableArrayListExtra("id_key");
 
 
-        petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
+        UserDB.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final List<String> petName = new ArrayList<String>(); //이름 담을 array
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
 
-                for (DataSnapshot nameSnapshot: dataSnapshot.getChildren()){ //강아지 담긴 수만큼 받아와서 array에 넣기
-                    String data = nameSnapshot.getValue().toString();
-                    petName.add(data);
-                }
+                petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        final List<String> petName = new ArrayList<String>(); //이름 담을 array
 
-                //ArrayAdapter 객체 생성
-                ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(AddSchedule.this, android.R.layout.simple_spinner_item, petName);
+                        for (DataSnapshot nameSnapshot : dataSnapshot.getChildren()) { //강아지 담긴 수만큼 받아와서 array에 넣기
+                            String data = nameSnapshot.getValue().toString();
+                            petName.add(data);
+                        }
 
-                nameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(nameAdapter); //어댑터에 연결
+                        //ArrayAdapter 객체 생성
+                        ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(AddSchedule.this, android.R.layout.simple_spinner_item, petName);
 
+                        nameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(nameAdapter); //어댑터에 연결
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -86,6 +100,7 @@ public class AddSchedule extends AppCompatActivity {
             }
         });
 
+
         //선택된 강아지
         spinner.setSelection(Adapter.NO_SELECTION, true);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -93,28 +108,28 @@ public class AddSchedule extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 pet.Pet_Name = spinner.getItemAtPosition(position).toString(); //강아지 이름을 스피너에서 받아옴
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
-        et_button.setOnClickListener(new View.OnClickListener(){
+        et_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String getDetail = et_ds.getText().toString();
 
                         //상세일정 입력 칸이 비어있다면
-                        if(getDetail.equals("")) {
+                        if (getDetail.equals("")) {
                             Toast.makeText(AddSchedule.this, "상세일정을 입력해주세요", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             event.Detail = getDetail;
 
-                            eventDB.child(getUserID).child(pet.Pet_Name).child(Join).child("Detail").setValue(event.Detail); //User_event하위에 event 등록
+                            eventDB.child(LeaderID).child(pet.Pet_Name).child(Join).child("Detail").setValue(event.Detail); //User_event하위에 event 등록
 
                             Toast.makeText(AddSchedule.this, "등록 완료", Toast.LENGTH_SHORT).show();
                             finish();

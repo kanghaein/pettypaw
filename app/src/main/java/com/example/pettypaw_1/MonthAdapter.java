@@ -43,34 +43,35 @@ public class MonthAdapter extends BaseAdapter {
 
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
 
-    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
+    String LeaderID;
 
     MonthItem[] items;
     int curYear;
     int curMonth;
 
-    MonthAdapter(Context context){
+    MonthAdapter(Context context) {
         super();
         mContext = context;
         init();
     }
 
-    MonthAdapter(Context context, AttributeSet attrs){
+    MonthAdapter(Context context, AttributeSet attrs) {
         super();
         mContext = context;
         init();
     }
 
-    public void init(){
+    public void init() {
         cal = Calendar.getInstance(); //Calendar 객체 가져오기
-        items = new MonthItem[7*6]; //아이템 크기 결정
+        items = new MonthItem[7 * 6]; //아이템 크기 결정
 
         calculate();//날짜 계산해서 items[] 배열 값 설정
     }
 
-    public void calculate(){
+    public void calculate() {
 
-        for(int i=0; i<items.length; i++){ //items[] 모든 값 0으로 초기화
+        for (int i = 0; i < items.length; i++) { //items[] 모든 값 0으로 초기화
             items[i] = new MonthItem(0);
         }
 
@@ -80,7 +81,7 @@ public class MonthAdapter extends BaseAdapter {
         int lastDay = cal.getActualMaximum(Calendar.DATE); //달의 마지막 날짜
 
         int cnt = 1;
-        for(int i=startDay-1; i<startDay-1+lastDay; i++){ /* 1일의 요일에 따라 시작위치 다르고 마지막 날짜까지 값 지정*/
+        for (int i = startDay - 1; i < startDay - 1 + lastDay; i++) { /* 1일의 요일에 따라 시작위치 다르고 마지막 날짜까지 값 지정*/
             items[i] = new MonthItem(cnt);
             cnt++;
         }
@@ -89,12 +90,12 @@ public class MonthAdapter extends BaseAdapter {
         curMonth = cal.get(Calendar.MONTH);
     }
 
-    public void setPreviousMonth(){ //한 달 앞으로 가고 다시 계산
+    public void setPreviousMonth() { //한 달 앞으로 가고 다시 계산
         cal.add(Calendar.MONTH, -1);
         calculate();
     }
 
-    public void setNextMonth(){
+    public void setNextMonth() {
         cal.add(Calendar.MONTH, 1); //한 달 뒤로가고 다시 계산
         calculate();
     }
@@ -113,54 +114,65 @@ public class MonthAdapter extends BaseAdapter {
         String[] arrDay = new String[3];
         //각 index에 날짜 값을 담는다.
         arrDay[0] = String.valueOf(curYear);
-        arrDay[1] = String.valueOf(curMonth+1);
+        arrDay[1] = String.valueOf(curMonth + 1);
         arrDay[2] = String.valueOf(item.getDay());
 
         //Join으로 배열 묶어준다.
-        String ymd = TextUtils.join("",arrDay);
+        String ymd = TextUtils.join("", arrDay);
 
         //View의 Id값을 지정하기 위해서 String값을 integer로 변환한 후 Id지정
         int ymd_integer = Integer.parseInt(ymd);
         view.setId(ymd_integer);
         String ymd_id = String.valueOf(view.getId());
 
-        //파이어베이스 등록된 날짜와 그리드 뷰의 아이템 아이디 값과 같으면 lens_24를 백그라운드로 설정하여 일정이 있다는 것을 한눈에 알아볼 수 있게
-        petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
+        userDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds : snapshot.getChildren()){
-                    String pet_name= ds.getValue().toString();
+                LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
+                petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    eventDB.child(getUserID).child(pet_name).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.child(ymd_id).exists()){
-                                    view.setBackgroundColor(Color.GRAY);
-                                    /**********일정 표시 디자인 부분**********/
-                                    //view.setBackgroundResource(R.drawable.ic_baseline_lens_24);
-                                    view.setItem(item);
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            String pet_name = ds.getValue().toString();
 
-                                    if(position%7==0){ //일요일은 날짜 색 빨간색으로
-                                        view.setTextColor(Color.RED);
-                                    }
+                            eventDB.child(LeaderID).child(pet_name).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.child(ymd_id).exists()) {
+                                        view.setBackgroundColor(Color.GRAY);
+                                        /**********일정 표시 디자인 부분**********/
+                                        //view.setBackgroundResource(R.drawable.ic_baseline_lens_24);
+                                        view.setItem(item);
 
-                                } else{
-                                    view.setItem(item);
+                                        if (position % 7 == 0) { //일요일은 날짜 색 빨간색으로
+                                            view.setTextColor(Color.RED);
+                                        }
 
-                                    if(position%7==0){ //일요일은 날짜 색 빨간색으로
-                                        view.setTextColor(Color.RED);
+                                    } else {
+                                        view.setItem(item);
+
+                                        if (position % 7 == 0) { //일요일은 날짜 색 빨간색으로
+                                            view.setTextColor(Color.RED);
+                                        }
                                     }
                                 }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+
                         }
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
-
-
-                }
+                    }
+                });
             }
 
             @Override
@@ -169,7 +181,7 @@ public class MonthAdapter extends BaseAdapter {
             }
         });
 
-        GridView.LayoutParams params = new GridView.LayoutParams( GridView.LayoutParams.MATCH_PARENT,150);
+        GridView.LayoutParams params = new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, 150);
         view.setLayoutParams(params);
 
         return view; //뷰 뿌려주기
@@ -190,7 +202,7 @@ public class MonthAdapter extends BaseAdapter {
         return curYear;
     }
 
-    public int getCurMonth(){
+    public int getCurMonth() {
         return curMonth;
     }
 
