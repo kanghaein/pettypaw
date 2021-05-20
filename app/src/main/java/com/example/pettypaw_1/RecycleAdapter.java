@@ -35,7 +35,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User_pet.java 를 통해 데이터베이스 접근
-    final DatabaseReference petDB = mDatabase.getReference("User_pet");
+    final DatabaseReference userDB = mDatabase.getReference("User");
     // User_event.java를 통해 데이터베이스 접근
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
     String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
@@ -105,28 +105,38 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                 holder.feed_checked.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
 
-                                // 체크박스를 체크한다면
-                                if(holder.feed_checked.isChecked()) {
-                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Feed").setValue("checked");
+                                eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        // 체크박스를 체크한다면
+                                        if (holder.feed_checked.isChecked()) {
+                                            eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue("checked");
 
-                                }
-                                // 체크박스를 해제한다면
-                                else{
-                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
+                                        }
+                                        // 체크박스를 해제한다면
+                                        else {
+                                            eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
 
-                                }
+                                        }
 
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+
+                                });
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
-
                         });
                     }
                 });
@@ -143,30 +153,38 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                 holder.walk_checked.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
+                                eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        // 체크박스를 체크한다면
+                                        if (holder.walk_checked.isChecked()) {
+                                            eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").setValue("checked");
 
-                                // 체크박스를 체크한다면
-                                if(holder.walk_checked.isChecked()) {
-                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Walk").setValue("checked");
+                                        }
+                                        // 체크박스를 해제한다면
+                                        else {
+                                            eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").setValue(null);
 
-                                }
-                                // 체크박스를 해제한다면
-                                else{
-                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Walk").setValue(null);
+                                        }
 
-                                }
+                                    }
 
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+
+                                });
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
-
                         });
-
                     }
                 });
                 item.setSelected_walk(isChecked);
