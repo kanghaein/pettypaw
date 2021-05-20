@@ -44,6 +44,7 @@ public class MonthAdapter extends BaseAdapter {
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
 
     String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+    String LeaderID;
 
     MonthItem[] items;
     int curYear;
@@ -124,45 +125,54 @@ public class MonthAdapter extends BaseAdapter {
         view.setId(ymd_integer);
         String ymd_id = String.valueOf(view.getId());
 
-        //파이어베이스 등록된 날짜와 그리드 뷰의 아이템 아이디 값과 같으면 lens_24를 백그라운드로 설정하여 일정이 있다는 것을 한눈에 알아볼 수 있게
-        petDB.child(getUserID).child("Pet List").addValueEventListener(new ValueEventListener() {
+        userDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot ds : snapshot.getChildren()){
-                    String pet_name= ds.getValue().toString();
+                LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
+                petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                    eventDB.child(getUserID).child(pet_name).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.child(ymd_id).exists()){
-                                    view.setBackgroundColor(Color.GRAY);
-                                    /**********일정 표시 디자인 부분**********/
-                                    //view.setBackgroundResource(R.drawable.ic_baseline_lens_24);
-                                    view.setItem(item);
+                                for(DataSnapshot ds : snapshot.getChildren()){
+                                    String pet_name= ds.getValue().toString();
 
-                                    if(position%7==0){ //일요일은 날짜 색 빨간색으로
-                                        view.setTextColor(Color.RED);
-                                    }
+                                    eventDB.child(LeaderID).child(pet_name).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if(snapshot.child(ymd_id).exists()){
+                                                view.setBackgroundColor(Color.GRAY);
+                                                /**********일정 표시 디자인 부분**********/
+                                                //view.setBackgroundResource(R.drawable.ic_baseline_lens_24);
+                                                view.setItem(item);
 
-                                } else{
-                                    view.setItem(item);
+                                                if(position%7==0){ //일요일은 날짜 색 빨간색으로
+                                                    view.setTextColor(Color.RED);
+                                                }
 
-                                    if(position%7==0){ //일요일은 날짜 색 빨간색으로
-                                        view.setTextColor(Color.RED);
-                                    }
+                                            } else{
+                                                view.setItem(item);
+
+                                                if(position%7==0){ //일요일은 날짜 색 빨간색으로
+                                                    view.setTextColor(Color.RED);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+
                                 }
-                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-
-                }
+                    }
+                });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
