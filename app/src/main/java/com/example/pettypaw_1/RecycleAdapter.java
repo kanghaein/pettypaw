@@ -119,13 +119,11 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                                         // 체크박스를 체크한다면
                                         if (holder.feed_checked.isChecked()) {
                                             eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue("checked");
-                                            ((CheckDetail) context_CheckDetail).recreate();
 
                                         }
                                         // 체크박스를 해제한다면
                                         else {
                                             eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
-
 
                                         }
 

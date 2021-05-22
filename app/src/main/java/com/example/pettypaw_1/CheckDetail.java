@@ -48,7 +48,7 @@ public class CheckDetail extends AppCompatActivity {
     String date;
     String clickDay;
     String LeaderID;
-
+    int i=0;
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -118,7 +118,7 @@ public class CheckDetail extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
-
+                list.clear();
 
                 // 리사이클러뷰 item 들의 모든 이벤트
                 // 상세보기에 일정리스트 띄우기, Pet List 를 이용하기 위한 petDB 접근
@@ -126,15 +126,11 @@ public class CheckDetail extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        //기존 리스트가 존재하지 않게 초기화
-                        list.clear();
-
                         // 자신이 등록한 반려동물의 수만큼 반복
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             String pet_name = ds.getValue().toString();
-
+                            long child_count = snapshot.getChildrenCount(); // 펫리스트에 등록된 자식의 수
                             Drawable drawable = getDrawable(R.drawable.paw).mutate();
-
 
                             // 상세일정을 불러오기 위한 eventDB 접근
                             eventDB.child(LeaderID).child(pet_name).addValueEventListener(new ValueEventListener() {
@@ -219,21 +215,23 @@ public class CheckDetail extends AppCompatActivity {
                                             }
                                         });
 
-                                        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-                                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                        // 하나의 반려동물을 루프 돌면 i를 +1 한다
+                                        // 만약 i가 펫리스트에 등록된 반려동물의 수보다 작다면 어댑터를 이용한 작업 실시
+                                        if(i < child_count) {
+                                            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-                                        RecycleAdapter adapter = new RecycleAdapter(list);
+                                            RecycleAdapter adapter = new RecycleAdapter(list);
 
-                                        //리스트 저장 및 새로고침하여 반영
-                                        adapter.notifyDataSetChanged();
+                                            //리스트 저장 및 새로고침하여 반영
+                                            adapter.notifyDataSetChanged();
 
-                                        recyclerView.setAdapter(adapter);
-
+                                            recyclerView.setAdapter(adapter);
+                                        }
 
                                     }
-
-
-
+                                    // 하나의 반려동물에 대한 처리를 한 후 i를 +1 한다
+                                    i++;
                                 }
 
 
