@@ -1,6 +1,7 @@
 package com.example.pettypaw_1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +26,12 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static com.example.pettypaw_1.CheckDetail.context_CheckDetail;
+import static com.example.pettypaw_1.ViewCalendar.context_view;
 
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
 
     private ArrayList<Recycler_item> Data = null;
-
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -40,6 +41,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
     String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
     String getDay = ((CheckDetail) context_CheckDetail).clickDay;
+
 
     //아이템 뷰를 저장하는 뷰홀더 클래스
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -67,6 +69,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     RecycleAdapter(ArrayList<Recycler_item> list){
 
         Data = list;
+
     }
 
 
@@ -90,7 +93,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     //어떤 데이터를 아이템뷰에 표시할 것인지는 position값 참조
     @Override
     public void onBindViewHolder(RecycleAdapter.ViewHolder holder, int position){
-        final Recycler_item item = Data.get(position);
+        Recycler_item item = Data.get(position);
 
         holder.dogName.setText(item.getPetName());
         holder.textView1.setText(item.getDetail());
@@ -116,11 +119,13 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                                         // 체크박스를 체크한다면
                                         if (holder.feed_checked.isChecked()) {
                                             eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue("checked");
+                                            ((CheckDetail) context_CheckDetail).recreate();
 
                                         }
                                         // 체크박스를 해제한다면
                                         else {
                                             eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
+
 
                                         }
 
@@ -132,6 +137,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                                     }
 
                                 });
+
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
@@ -191,18 +197,12 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
             }
         });
 
-
     }
 
     //어댑터에서 관리하는 아이템의 개수를 반환
     @Override
     public int getItemCount(){
         return Data.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
     }
 
 }

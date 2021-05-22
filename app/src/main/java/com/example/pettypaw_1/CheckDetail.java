@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -118,6 +119,7 @@ public class CheckDetail extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
 
+
                 // 리사이클러뷰 item 들의 모든 이벤트
                 // 상세보기에 일정리스트 띄우기, Pet List 를 이용하기 위한 petDB 접근
                 petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
@@ -138,6 +140,7 @@ public class CheckDetail extends AppCompatActivity {
                             eventDB.child(LeaderID).child(pet_name).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                                     // DB상에 클릭한 날짜에 해당하는 노드가 존재한다면
                                     if (snapshot.child(clickDay).exists()) {
 
@@ -226,7 +229,9 @@ public class CheckDetail extends AppCompatActivity {
 
                                         recyclerView.setAdapter(adapter);
 
+
                                     }
+
 
 
                                 }
@@ -241,7 +246,6 @@ public class CheckDetail extends AppCompatActivity {
 
 
                         }
-
 
                     }
 
@@ -261,7 +265,6 @@ public class CheckDetail extends AppCompatActivity {
             }
         });
 
-
     }
 
     // 리사이클러뷰의 각각의 item 에 따로 데이터를 저장하기 위한 함수
@@ -276,6 +279,7 @@ public class CheckDetail extends AppCompatActivity {
 
 
         list.add(item);
+
     }
 
 
