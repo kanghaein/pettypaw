@@ -151,11 +151,52 @@ public class CheckDetail extends AppCompatActivity {
                             list.add(item);
 
 
+                            // 반려동물 색상
+                            petDB.child(LeaderID).child("Pet Information").child(pet_name).child("Color").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String color = snapshot.getValue().toString();
+
+                                    switch (color) {
+                                        case "빨강색":
+                                            drawable.setColorFilter(Color.parseColor("#FF0000"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "주황색":
+                                            drawable.setColorFilter(Color.parseColor("#FF9800"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "노랑색":
+                                            drawable.setColorFilter(Color.parseColor("#FFEB3B"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "초록색":
+                                            drawable.setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "파랑색":
+                                            drawable.setColorFilter(Color.parseColor("#03A9F4"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "남색":
+                                            drawable.setColorFilter(Color.parseColor("#00106A"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "보라색":
+                                            drawable.setColorFilter(Color.parseColor("#E448FF"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+
                             // 상세일정을 불러오기 위한 eventDB 접근
                             eventDB.child(LeaderID).child(pet_name).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                                     // DB상에 클릭한 날짜에 해당하는 노드가 존재한다면
                                     if (snapshot.child(clickDay).exists()) {
                                         //상세일정이 있으면 받아와서 Detail부분을 갱신해줌
@@ -201,48 +242,6 @@ public class CheckDetail extends AppCompatActivity {
                                             item.setSelected_feed(false);
                                             item.setSelected_walk(false);
                                         }
-
-                                        // 반려동물 색상
-                                        petDB.child(LeaderID).child("Pet Information").child(pet_name).child("Color").addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String color = snapshot.getValue().toString();
-
-                                                switch (color) {
-                                                    case "빨강색":
-                                                        drawable.setColorFilter(Color.parseColor("#FF0000"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "주황색":
-                                                        drawable.setColorFilter(Color.parseColor("#FF9800"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "노랑색":
-                                                        drawable.setColorFilter(Color.parseColor("#FFEB3B"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "초록색":
-                                                        drawable.setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "파랑색":
-                                                        drawable.setColorFilter(Color.parseColor("#03A9F4"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "남색":
-                                                        drawable.setColorFilter(Color.parseColor("#00106A"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "보라색":
-                                                        drawable.setColorFilter(Color.parseColor("#E448FF"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    default:
-                                                        break;
-                                                }
-
-
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-
 
                                     }
 
