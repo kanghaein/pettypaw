@@ -118,13 +118,22 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         // 체크박스를 체크한다면
                                         if (holder.feed_checked.isChecked()) {
+                                            if(!snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").exists()){
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").setValue("등록된 일정 없음");
+                                            }
                                             eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue("checked");
 
                                         }
                                         // 체크박스를 해제한다면
                                         else {
-                                            eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
+                                            if(!snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").exists()
+                                                    && snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").getValue().toString().equals("등록된 일정 없음")){
 
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).setValue(null);
+
+                                            }
+                                            else
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
                                         }
 
                                     }
@@ -166,13 +175,21 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         // 체크박스를 체크한다면
                                         if (holder.walk_checked.isChecked()) {
+                                            if(!snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").exists()){
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").setValue("등록된 일정 없음");
+                                            }
                                             eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").setValue("checked");
 
                                         }
                                         // 체크박스를 해제한다면
                                         else {
-                                            eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").setValue(null);
+                                            if(!snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").exists()
+                                                    && snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").getValue().toString().equals("등록된 일정 없음")){
 
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).setValue(null);
+                                            }
+                                            else
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").setValue(null);
                                         }
 
                                     }
