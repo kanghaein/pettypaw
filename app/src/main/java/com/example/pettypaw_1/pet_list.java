@@ -34,6 +34,7 @@ public class pet_list extends AppCompatActivity {
     private ListView enrolled_pet_list;
     private ArrayAdapter<String> adapter;
     List<Object> Array = new ArrayList<Object>();
+    List<String> nameArr = new ArrayList<String>();
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -55,10 +56,12 @@ public class pet_list extends AppCompatActivity {
         btn_enroll = findViewById(R.id.btn_enroll);
 
         enrolled_pet_list = (ListView) findViewById(R.id.enrolled_pet_list);
+        //enrolled_pet_list.setAdapter(adapter);
+
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameArr);
         enrolled_pet_list.setAdapter(adapter);
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>());
-        enrolled_pet_list.setAdapter(adapter);
+        Array.clear();
 
 
         // (User -> User List -> 로그인한 ID -> Leader_ID) 의 값은 같은 그룹에 속한 사람들이라면
@@ -71,11 +74,11 @@ public class pet_list extends AppCompatActivity {
                 petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                         // 리스트 출력. 자식이 있는 수만큼 반복
                         for(DataSnapshot ds : snapshot.getChildren()) {
-
                             name = ds.getValue().toString();
-                            Array.add(name);
+                            Array.add(name); //밑에서 position 접근하기 위한 배열
                             adapter.add(name);
 
                         }
@@ -112,7 +115,7 @@ public class pet_list extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PetAdditionalEnroll.class);
                 startActivity(intent);
-                };
+            };
         });
     }
 

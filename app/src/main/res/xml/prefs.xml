@@ -7,10 +7,10 @@
         android:title="Push Alarm on/off">
 
         <SwitchPreference
-            android:title="푸시 알람"
+            android:title="푸시 알림"
             android:key="pushAlarm"
             android:defaultValue="true"
-            android:summary="설정한 시간 전에 알림 받기" />
+            android:summary="설정한 일 전에 알림 전송" />
 
         <ListPreference
             android:title="시간 설정"

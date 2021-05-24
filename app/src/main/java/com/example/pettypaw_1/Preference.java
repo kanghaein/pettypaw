@@ -17,30 +17,30 @@ public class Preference extends PreferenceActivity {
         Load_alarm();
     }
 
-    private void Load_alarm(){
+    private void Load_alarm() {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        ListPreference LP = (ListPreference)findPreference("alarm");
+        ListPreference LP = (ListPreference) findPreference("alarm");
 
         LP.setOnPreferenceChangeListener(new android.preference.Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(android.preference.Preference prefs, Object o) {
 
-                String items = (String)o;
-                if(prefs.getKey().equals("alarm")) {
+                String items = (String) o;
+                if (prefs.getKey().equals("alarm")) {
                     switch (items) {
                         case "7":
-                            Toast.makeText(getApplicationContext(), "7시간 후에 푸시알람", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "7일 전에 푸시알람", Toast.LENGTH_LONG).show();
                             break;
                         case "5":
-                            Toast.makeText(getApplicationContext(), "5시간 후에 푸시알람", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "5일 전에 푸시알람", Toast.LENGTH_LONG).show();
                             break;
                         case "3":
-                            Toast.makeText(getApplicationContext(), "3시간 후에 푸시알람", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "3일 전에 푸시알람", Toast.LENGTH_LONG).show();
                             break;
                         case "1":
-                            Toast.makeText(getApplicationContext(), "1시간 후에 푸시알람", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "1일 전에 푸시알람", Toast.LENGTH_LONG).show();
                             break;
                     }
                 }

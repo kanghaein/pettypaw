@@ -37,7 +37,7 @@ public class GroupManagement extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     List<Object> Array = new ArrayList<Object>();
 
-    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -68,10 +68,9 @@ public class GroupManagement extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         // 서치뷰의 검색창에 입력한 query 값이 UserDB 상에 존재하지 않는다면
-                        if(!snapshot.child(query).exists()){
+                        if (!snapshot.child(query).exists()) {
                             Toast.makeText(GroupManagement.this, "존재하지 않는 유저입니다", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
                             // 서치뷰의 검색창에 입력한 query 값을 리스트에 출력
                             Array.add(query);
                             adapter.add(query);
@@ -80,6 +79,7 @@ public class GroupManagement extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                         search_list.setSelection(adapter.getCount() - 1);
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -115,14 +115,13 @@ public class GroupManagement extends AppCompatActivity {
                                 user_invite = snapshot.child("User List").child(Array.get(position).toString()).child("Invite").getValue().toString();
 
                                 // 초대하고자 하는 사람이 이미 다른 그룹에 속해있다면
-                                if(user_invite.equals("invited")){
+                                if (user_invite.equals("invited")) {
                                     Toast.makeText(GroupManagement.this, "이미 그룹에 속한 회원입니다", Toast.LENGTH_SHORT).show();
                                 }
                                 // 초대하고자 하는 사람이 다른 그룹의 리더라면
-                                else if(user_invite.equals("Leader")){
+                                else if (user_invite.equals("Leader")) {
                                     Toast.makeText(GroupManagement.this, "이미 그룹에 속한 회원입니다", Toast.LENGTH_SHORT).show();
-                                }
-                                else{
+                                } else {
                                     // (User -> User List -> 선택된 리스트의 유저 ID) 에게 자식으로 invited 라는 값과 초대한 자신의 ID 값을 준다
                                     User_list user_list = new User_list("invited", getUserID);
                                     UserDB.child("User List").child(Array.get(position).toString()).setValue(user_list);
@@ -163,8 +162,7 @@ public class GroupManagement extends AppCompatActivity {
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LeaderSetting.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
     }
