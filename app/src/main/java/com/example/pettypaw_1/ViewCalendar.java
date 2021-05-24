@@ -110,6 +110,7 @@ public class ViewCalendar extends AppCompatActivity {
                 intent.putExtra("date",adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일");
 
                 startActivity(intent);
+                finish();
 
             }
 

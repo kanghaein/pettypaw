@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.example.pettypaw_1.pet_list.context_pet_list;
+
 public class PetAdditionalEnroll extends AppCompatActivity {
 
     EditText et_name, et_age;
@@ -120,6 +122,8 @@ public class PetAdditionalEnroll extends AppCompatActivity {
 
                                         Toast.makeText(PetAdditionalEnroll.this, "등록 완료", Toast.LENGTH_SHORT).show();
 
+                                        Intent intent = new Intent(getApplicationContext(), pet_list.class);
+                                        startActivity(intent);
                                         finish();
                                     }
                                 }
@@ -141,5 +145,12 @@ public class PetAdditionalEnroll extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), pet_list.class);
+        startActivity(intent);
+        finish();
     }
 }

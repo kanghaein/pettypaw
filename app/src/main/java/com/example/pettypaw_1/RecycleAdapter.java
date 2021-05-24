@@ -1,6 +1,7 @@
 package com.example.pettypaw_1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,21 +26,22 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static com.example.pettypaw_1.CheckDetail.context_CheckDetail;
+import static com.example.pettypaw_1.ViewCalendar.context_view;
 
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
 
     private ArrayList<Recycler_item> Data = null;
 
-
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User_pet.java 를 통해 데이터베이스 접근
-    final DatabaseReference petDB = mDatabase.getReference("User_pet");
+    final DatabaseReference userDB = mDatabase.getReference("User");
     // User_event.java를 통해 데이터베이스 접근
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
     String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
     String getDay = ((CheckDetail) context_CheckDetail).clickDay;
+
 
     //아이템 뷰를 저장하는 뷰홀더 클래스
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -67,6 +69,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     RecycleAdapter(ArrayList<Recycler_item> list){
 
         Data = list;
+
     }
 
 
@@ -90,7 +93,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     //어떤 데이터를 아이템뷰에 표시할 것인지는 position값 참조
     @Override
     public void onBindViewHolder(RecycleAdapter.ViewHolder holder, int position){
-        final Recycler_item item = Data.get(position);
+        Recycler_item item = Data.get(position);
 
         holder.dogName.setText(item.getPetName());
         holder.textView1.setText(item.getDetail());
@@ -105,28 +108,48 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                 holder.feed_checked.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
 
-                                // 체크박스를 체크한다면
-                                if(holder.feed_checked.isChecked()) {
-                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Feed").setValue("checked");
+                                eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        // 체크박스를 체크한다면
+                                        if (holder.feed_checked.isChecked()) {
+                                            if(!snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").exists()){
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").setValue("등록된 일정 없음");
+                                            }
+                                            eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue("checked");
 
-                                }
-                                // 체크박스를 해제한다면
-                                else{
-                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
+                                        }
+                                        // 체크박스를 해제한다면
+                                        else {
+                                            if(!snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").exists()
+                                                    && snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").getValue().toString().equals("등록된 일정 없음")){
 
-                                }
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).setValue(null);
+
+                                            }
+                                            else
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").setValue(null);
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+
+                                });
 
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
-
                         });
                     }
                 });
@@ -143,36 +166,51 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
                 holder.walk_checked.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
+                                eventDB.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        // 체크박스를 체크한다면
+                                        if (holder.walk_checked.isChecked()) {
+                                            if(!snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").exists()){
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").setValue("등록된 일정 없음");
+                                            }
+                                            eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").setValue("checked");
 
-                                // 체크박스를 체크한다면
-                                if(holder.walk_checked.isChecked()) {
-                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Walk").setValue("checked");
+                                        }
+                                        // 체크박스를 해제한다면
+                                        else {
+                                            if(!snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Feed").exists()
+                                                    && snapshot.child(LeaderID).child(item.getPetName()).child(getDay).child("Detail").getValue().toString().equals("등록된 일정 없음")){
 
-                                }
-                                // 체크박스를 해제한다면
-                                else{
-                                    eventDB.child(getUserID).child(item.getPetName()).child(getDay).child("Walk").setValue(null);
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).setValue(null);
+                                            }
+                                            else
+                                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).child("Walk").setValue(null);
+                                        }
 
-                                }
+                                    }
 
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+
+                                });
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
-
                         });
-
                     }
                 });
                 item.setSelected_walk(isChecked);
             }
         });
-
 
     }
 
@@ -180,11 +218,6 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     @Override
     public int getItemCount(){
         return Data.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position;
     }
 
 }

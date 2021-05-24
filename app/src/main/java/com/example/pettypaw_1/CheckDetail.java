@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +48,7 @@ public class CheckDetail extends AppCompatActivity {
     String date;
     String clickDay;
     String LeaderID;
-
+    int i=0;
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -113,25 +114,83 @@ public class CheckDetail extends AppCompatActivity {
 
         });
 
+
         UserDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
+                list.clear();
 
                 // 리사이클러뷰 item 들의 모든 이벤트
                 // 상세보기에 일정리스트 띄우기, Pet List 를 이용하기 위한 petDB 접근
                 petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        //기존 리스트가 존재하지 않게 초기화
-                        list.clear();
-
                         // 자신이 등록한 반려동물의 수만큼 반복
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             String pet_name = ds.getValue().toString();
 
+                            long child_count = snapshot.getChildrenCount(); // 펫리스트에 등록된 자식의 수
                             Drawable drawable = getDrawable(R.drawable.paw).mutate();
+
+                            //반려동물 수만큼 recycler_item을 생성한다, 각 객체의 속성에 접근 가능하게 하기 위해서
+                            Recycler_item item = new Recycler_item();
+
+                            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+                            RecycleAdapter adapter = new RecycleAdapter(list);
+
+                            //recycler_item의 각 속성 set
+                            item.setPetName(pet_name);
+                            item.setDetail("등록된 일정 없음");
+                            item.setSelected_feed(false);
+                            item.setSelected_walk(false);
+                            item.setIcon(drawable);
+
+                            list.add(item);
+
+
+                            // 반려동물 색상
+                            petDB.child(LeaderID).child("Pet Information").child(pet_name).child("Color").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String color = snapshot.getValue().toString();
+
+                                    switch (color) {
+                                        case "빨강색":
+                                            drawable.setColorFilter(Color.parseColor("#FF0000"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "주황색":
+                                            drawable.setColorFilter(Color.parseColor("#FF9800"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "노랑색":
+                                            drawable.setColorFilter(Color.parseColor("#FFEB3B"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "초록색":
+                                            drawable.setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "파랑색":
+                                            drawable.setColorFilter(Color.parseColor("#03A9F4"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "남색":
+                                            drawable.setColorFilter(Color.parseColor("#00106A"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        case "보라색":
+                                            drawable.setColorFilter(Color.parseColor("#E448FF"), PorterDuff.Mode.SRC_IN);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
 
 
                             // 상세일정을 불러오기 위한 eventDB 접근
@@ -140,8 +199,9 @@ public class CheckDetail extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     // DB상에 클릭한 날짜에 해당하는 노드가 존재한다면
                                     if (snapshot.child(clickDay).exists()) {
-
+                                        //상세일정이 있으면 받아와서 Detail부분을 갱신해줌
                                         String detail = snapshot.child(clickDay).child("Detail").getValue().toString();
+                                        item.setDetail(detail);
 
                                         // 액티비티에 접근하면 체크박스의 저장된 상태를 불러오기 위한 if문
                                         // 클릭한 날짜의 자식으로 Feed 와 Walk 가 둘 다 존재한다면
@@ -150,7 +210,9 @@ public class CheckDetail extends AppCompatActivity {
                                             String walk_check = snapshot.child(clickDay).child("Walk").getValue().toString();
                                             // Feed 와 Walk 가 둘 다 "checked" 상태라면 펫이름, 상세일정 입력 후 모든 체크박스 체크한다
                                             if (feed_check.equals("checked") && walk_check.equals("checked")) {
-                                                addItem(pet_name, detail, true, true, drawable);
+                                                //addItem(pet_name, detail, true, true, drawable);
+                                                item.setSelected_feed(true);
+                                                item.setSelected_walk(true);
                                             }
                                         }
                                         // 클릭한 날짜의 자식으로 Feed 만 존재한다면
@@ -158,7 +220,9 @@ public class CheckDetail extends AppCompatActivity {
                                             String feed_check = snapshot.child(clickDay).child("Feed").getValue().toString();
                                             // Feed 의 상태가 "checked"라면 펫이름, 상세일정 입력 후 Feed 만 체크한다
                                             if (feed_check.equals("checked")) {
-                                                addItem(pet_name, detail, true, false, drawable);
+                                                //addItem(pet_name, detail, true, false, drawable);
+                                                item.setSelected_feed(true);
+                                                item.setSelected_walk(false);
                                             }
                                         }
                                         // 클릭한 날짜의 자식으로 Walk 만 존재한다면
@@ -166,69 +230,33 @@ public class CheckDetail extends AppCompatActivity {
                                             String walk_check = snapshot.child(clickDay).child("Walk").getValue().toString();
                                             // Walk 의 상태가 "checked"라면 펫이름, 상세일정 입력 후 Walk 만 체크한다
                                             if (walk_check.equals("checked")) {
-                                                addItem(pet_name, detail, false, true, drawable);
+                                                //addItem(pet_name, detail, false, true, drawable);
+                                                item.setSelected_feed(false);
+                                                item.setSelected_walk(true);
                                             }
                                         }
                                         // 클릭한 날짜의 자식으로 Detail 만 존재한다면
                                         else {
                                             // 펫이름, 상세일정 입력 후 모든 체크박스를 비활성화 한다
-                                            addItem(pet_name, detail, false, false, drawable);
+                                            //addItem(pet_name, detail, false, false, drawable);
+                                            item.setSelected_feed(false);
+                                            item.setSelected_walk(false);
                                         }
 
-                                        // 반려동물 색상
-                                        petDB.child(LeaderID).child("Pet Information").child(pet_name).child("Color").addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                String color = snapshot.getValue().toString();
+                                    }
 
-                                                switch (color) {
-                                                    case "빨강색":
-                                                        drawable.setColorFilter(Color.parseColor("#FF0000"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "주황색":
-                                                        drawable.setColorFilter(Color.parseColor("#FF9800"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "노랑색":
-                                                        drawable.setColorFilter(Color.parseColor("#FFEB3B"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "초록색":
-                                                        drawable.setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "파랑색":
-                                                        drawable.setColorFilter(Color.parseColor("#03A9F4"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "남색":
-                                                        drawable.setColorFilter(Color.parseColor("#00106A"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    case "보라색":
-                                                        drawable.setColorFilter(Color.parseColor("#E448FF"), PorterDuff.Mode.SRC_IN);
-                                                        break;
-                                                    default:
-                                                        break;
-                                                }
-
-
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-
-                                        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-                                        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-                                        RecycleAdapter adapter = new RecycleAdapter(list);
-
+                                    // 하나의 반려동물을 루프 돌면 i를 +1 한다
+                                    // 만약 i가 펫리스트에 등록된 반려동물의 수보다 작다면 어댑터를 이용한 작업 실시
+                                    if(i < child_count) {
                                         //리스트 저장 및 새로고침하여 반영
                                         adapter.notifyDataSetChanged();
 
                                         recyclerView.setAdapter(adapter);
-
                                     }
 
 
+                                    // 하나의 반려동물에 대한 처리를 한 후 i를 +1 한다
+                                    i++;
                                 }
 
 
@@ -241,7 +269,6 @@ public class CheckDetail extends AppCompatActivity {
 
 
                         }
-
 
                     }
 
@@ -261,22 +288,28 @@ public class CheckDetail extends AppCompatActivity {
             }
         });
 
+    }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
+        startActivity(intent);
+        finish();
     }
 
     // 리사이클러뷰의 각각의 item 에 따로 데이터를 저장하기 위한 함수
-    public void addItem(String petName, String detail, boolean feed, boolean walk, Drawable icon) {
-        Recycler_item item = new Recycler_item();
-
-        item.setPetName(petName);
-        item.setDetail(detail);
-        item.setSelected_feed(feed);
-        item.setSelected_walk(walk);
-        item.setIcon(icon);
-
-
-        list.add(item);
-    }
+//    public void addItem(String petName, String detail, boolean feed, boolean walk, Drawable icon) {
+//        Recycler_item item = new Recycler_item();
+//
+//        item.setPetName(petName);
+//        item.setDetail(detail);
+//        item.setSelected_feed(feed);
+//        item.setSelected_walk(walk);
+//        item.setIcon(icon);
+//
+//        list.add(item);
+//
+//    }
 
 
 }
