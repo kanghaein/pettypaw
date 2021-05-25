@@ -126,7 +126,7 @@ public class CheckDetail extends AppCompatActivity {
                 petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // 자신이 등록한 반려동물의 수만큼 반복
+                        // 자신이 등록한 반려동물의 수만큼 반복S
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             String pet_name = ds.getValue().toString();
 
@@ -147,6 +147,8 @@ public class CheckDetail extends AppCompatActivity {
                             item.setSelected_feed(false);
                             item.setSelected_walk(false);
                             item.setIcon(drawable);
+
+
 
                             list.add(item);
 

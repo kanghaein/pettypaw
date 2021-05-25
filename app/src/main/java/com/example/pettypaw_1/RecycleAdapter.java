@@ -2,10 +2,12 @@ package com.example.pettypaw_1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.CompoundButton;
@@ -39,8 +41,12 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
     final DatabaseReference userDB = mDatabase.getReference("User");
     // User_event.java를 통해 데이터베이스 접근
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
+
+    final DatabaseReference petDB = mDatabase.getReference("User_pet");
+
     String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
     String getDay = ((CheckDetail) context_CheckDetail).clickDay;
+    String LeaderID;
 
 
     //아이템 뷰를 저장하는 뷰홀더 클래스
@@ -48,6 +54,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
         TextView textView1, dogName;
         CheckBox feed_checked, walk_checked;
         ImageView colorimage;
+        Button btn_delete;
 
 
         ViewHolder(View itemView){
@@ -59,6 +66,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
             walk_checked = itemView.findViewById(R.id.walk_checked);
             dogName = itemView.findViewById(R.id.dogName);
             colorimage = itemView.findViewById(R.id.colorimage);
+            btn_delete = itemView.findViewById(R.id.btn_delete);
 
 
             //int pos = getAdapterPosition(); //어댑터 내 아이템의 위치
@@ -98,6 +106,35 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHold
         holder.dogName.setText(item.getPetName());
         holder.textView1.setText(item.getDetail());
         holder.colorimage.setImageDrawable(item.getIcon());
+        holder.btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userDB.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
+                        petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
+
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                eventDB.child(LeaderID).child(item.getPetName()).child(getDay).setValue(null);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
 
         // 밥 체크박스 클릭 이벤트
         holder.feed_checked.setOnCheckedChangeListener(null);
