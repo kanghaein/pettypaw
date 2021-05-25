@@ -35,12 +35,12 @@ public class MonthAdapter extends BaseAdapter {
     Calendar cal;
     Context mContext;
 
+
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User.java 를 통해 데이터베이스 접근
     final DatabaseReference userDB = mDatabase.getReference("User");
     // Uer_pet.java 를 통해 데이터베이스 접근
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
-
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
 
     String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();

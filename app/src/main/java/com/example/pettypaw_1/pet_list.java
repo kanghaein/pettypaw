@@ -62,6 +62,8 @@ public class pet_list extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameArr);
         enrolled_pet_list.setAdapter(adapter);
 
+        Array.clear();
+
 
         // (User -> User List -> 로그인한 ID -> Leader_ID) 의 값은 같은 그룹에 속한 사람들이라면
         // 모두 리더의 ID로 통일되어 같으므로 이것을 그룹내 공유를 위한 키값으로 사용.
@@ -73,7 +75,7 @@ public class pet_list extends AppCompatActivity {
                 petDB.child(LeaderID).child("Pet List").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Array.clear();
+
                         // 리스트 출력. 자식이 있는 수만큼 반복
                         for(DataSnapshot ds : snapshot.getChildren()) {
                             name = ds.getValue().toString();
