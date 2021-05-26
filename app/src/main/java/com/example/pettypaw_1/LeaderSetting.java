@@ -52,7 +52,7 @@ public class LeaderSetting extends AppCompatActivity {
         btn_calender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CurrentCalendar.class);
+                Intent intent = new Intent(getApplicationContext(), CurrentCalendar_leader.class);
                 startActivity(intent);
             }
         });

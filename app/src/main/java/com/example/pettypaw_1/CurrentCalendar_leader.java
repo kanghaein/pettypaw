@@ -24,10 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CurrentCalendar extends AppCompatActivity {
+public class CurrentCalendar_leader extends AppCompatActivity {
 
     Button btn_back;
-    Button btn_out;
     String name;
     String member;
     String LeaderID;
@@ -62,7 +61,7 @@ public class CurrentCalendar extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_current_calendar);
+        setContentView(R.layout.activity_current_calendar_leader);
 
         context_view = this;
         T_LeaderID = (EditText) findViewById(R.id.textLeaderID);
@@ -173,64 +172,6 @@ public class CurrentCalendar extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
-            }
-        });
-
-        // 그룹탈퇴 버튼
-        btn_out = findViewById(R.id.btn_out);
-        btn_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder ad = new AlertDialog.Builder(CurrentCalendar.this);
-                ad.setTitle("그룹탈퇴");
-                ad.setMessage("정말로 탈퇴하시겠습니까?");
-
-                // 확인버튼
-                ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        UserDB.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
-
-                                GroupDB.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                        User_list user_list = new User_list("null", "null");
-
-                                        GroupDB.child(LeaderID).child(getUserID).setValue(null);
-                                        UserDB.child("User List").child(getUserID).setValue(user_list);
-                                        finish();
-
-                                        Intent intent = new Intent(getApplicationContext(), welcome.class);
-                                        startActivity(intent);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                });
-
-                // 취소버튼
-                ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                ad.show();
             }
         });
 
