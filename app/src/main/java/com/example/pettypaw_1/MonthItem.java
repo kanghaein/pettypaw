@@ -1,9 +1,6 @@
 package com.example.pettypaw_1;
 
-import android.content.Context;
-
-import java.time.Month;
-
+// 캘린더의 날짜를 전달하기 위한 클래스
 public class MonthItem {
 
     private int dayValue;

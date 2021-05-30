@@ -7,6 +7,7 @@ import android.view.Gravity;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
+// 캘린더의 날짜를 담기 위한 아이템뷰
 public class MonthItemView extends AppCompatTextView {
 
     private MonthItem item;

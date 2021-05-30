@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+// 알람기능을 수행하기 위한 액티비티
 public class AlarmTimeViewActivity extends AppCompatActivity {
 
     TextView alarmSetTime;

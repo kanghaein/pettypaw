@@ -21,29 +21,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// 반려동물을 등록하기 위한 액티비티
 public class enrollment1 extends AppCompatActivity {
 
-    EditText et_name, et_age;
-    Button btn_enroll;
-    RadioButton rb_man, rb_woman;
-    RadioGroup rg_gender;
-    String getPetGender; // 애완동물 성별 값을 전달받을 변수
-    Spinner spinner;
+    EditText et_name, et_age; // 이름 칸, 나이 칸
+    Button btn_enroll; // 등록 버튼
+    RadioButton rb_man, rb_woman; // 반려동물 성별 라디오 버튼
+    RadioGroup rg_gender; // 반려동물 성별 라디오 그룹
+    String getPetGender; // 성별을 String으로 저장하기 위한 변수
+    Spinner spinner; // 반려동물 색상 스피너
+
+    // MainActivity 에서 로그인 할 때 입력한 ID 값, 즉 자신의 ID
+    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User_pet.java 를 통해 데이터베이스 접근
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
+    // User.java 를 통해 데이터베이스 접근
     final DatabaseReference UserDB = mDatabase.getReference("User");
 
     public static Context context_enrollment1;
 
-    // MainActivity 에서 가져온 lg_ID 라는 변수 이용 => 로그인한 ID를 부모로 펫정보 입력
-    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enrollment1);
 
@@ -76,6 +77,7 @@ public class enrollment1 extends AppCompatActivity {
         btn_enroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 이름, 나이, 스피너의 값을 String 으로 받아온다
                 String getPetName = et_name.getText().toString();
                 String getPetAge = et_age.getText().toString();
                 String getColor = spinner.getSelectedItem().toString();
@@ -88,23 +90,22 @@ public class enrollment1 extends AppCompatActivity {
                             Toast.makeText(enrollment1.this, "정보를 입력해주세요", Toast.LENGTH_SHORT).show();
                         }
                         else{
+                            // User_pet.java 를 통해 이름, 나이, 성별, 색상을 한번에 입력
                             User_pet pet = new User_pet(getPetName, getPetAge, getPetGender, getColor);
 
-                            // 애완동물 데이터 입력, getUserID는 로그인한 ID
+                            // DB 상 (User_pet -> 자신의 ID -> Pet Information -> 반려동물 이름)에 해당 반려동물 정보 입력
                             petDB.child(getUserID).child("Pet Information").child(getPetName).setValue(pet);
 
-                            // 설정 => 반려동물 등록/편집 에서의 리스트 출력을 위한 애완동물 리스트 데이터 입력
+                            // 설정 => 반려동물 등록/편집 에서의 리스트 출력을 위한 Pet List 데이터 입력
                             petDB.child(getUserID).child("Pet List").child(getPetName).setValue(getPetName);
 
-                            // 첫 반려동물 등록을 완료하면 User -> User List 의 자식노드에 리더로 등록된다
+                            // 첫 반려동물 등록을 완료하면 현재 로그인한 유저는 User -> User List 의 자식노드에 리더로 등록된다
                             UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     User_list user_list = new User_list("Leader", getUserID);
                                     UserDB.child("User List").child(getUserID).setValue(user_list);
-
                                 }
-
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
 
@@ -112,23 +113,19 @@ public class enrollment1 extends AppCompatActivity {
                             });
 
                             Toast.makeText(enrollment1.this, "등록 완료", Toast.LENGTH_SHORT).show();
-                            finish();
 
+                            // 현재 액티비티를 종료하고 ViewCalendar.java 의 액티비티를 시작한다
+                            finish();
                             Intent intent = new Intent(getApplicationContext(), ViewCalendar.class);
                             startActivity(intent);
-
                         }
-
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
-
             }
         });
-
     }
 }

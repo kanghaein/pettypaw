@@ -16,7 +16,7 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 import java.util.Date;
-//
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -30,12 +30,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
+// 로그인 액티비티
 public class MainActivity extends AppCompatActivity {
 
 
-    //알람
-
+    // 알람 변수
     private TimePicker timePicker;
     private AlarmManager alarmManager;
     private int hour, minute;
@@ -46,13 +45,11 @@ public class MainActivity extends AppCompatActivity {
     // 화면 간 전환을 위한 REQUEST_CODE_SIGN 설정
     public static final int REQUEST_CODE_SIGN = 101;
 
+    EditText lg_ID, lg_PW; // 아이디 칸, 패스워드 칸
+    Button btn_sign, btn_login; // 회원가입 버튼, 로그인 버튼
+
     // 다른 액티비티에서 접근 가능
     public static Context context_main;
-
-    // 레이아웃의 id 값들 선언
-    EditText lg_ID, lg_PW;
-    Button btn_sign, btn_login;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         btn_sign = findViewById(R.id.btn_sign);
         btn_login = findViewById(R.id.btn_login);
 
+        // 파이어베이스 연동
         final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         // User.java 를 통해 데이터베이스 접근
         final DatabaseReference userDB = mDatabase.getReference("User");
@@ -90,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                // 입력한 ID와 PW를 String 값으로 저장
                 String getUserID = lg_ID.getText().toString();
                 String getUserPW = lg_PW.getText().toString();
 
@@ -103,9 +102,9 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            // DB의 child 에 입력한 ID가 존재한다면
+                            // DB의 User 노드에 child 로 입력한 ID가 존재한다면
                             if (snapshot.child(getUserID).exists()) {
-                                // User.java 를 통해 해당 child 의 ID 와 PW 값을 얻어오고
+                                // DB에 저장된 로그인 하려는 ID의 PW 값을 얻어오고
                                 String myPW = snapshot.child(getUserID).child("PW").getValue().toString();
                                 // 얻어온 PW와 입력된 PW가 일치한다면
                                 if (myPW.equals(getUserPW)) {
@@ -128,16 +127,16 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
+                                // 얻어온 PW와 입력된 PW가 일치하지 않는다면
                                 else {
                                     Toast.makeText(MainActivity.this, "ID 혹은 PW 가 옳지 않습니다", Toast.LENGTH_SHORT).show();
                                 }
                             }
+                            // DB의 User 노드에 child 로 입력한 ID가 존재하지 않는다면
                             else {
                                 Toast.makeText(MainActivity.this, "존재하지 않는 ID 입니다", Toast.LENGTH_SHORT).show();
                             }
-
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 
@@ -159,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // 알람 이벤트
     public void regist(View view) {
 
         boolean[] week = { false, cbSun.isChecked(), cbMon.isChecked(), cbTue.isChecked(), cbWed.isChecked(),
@@ -188,12 +188,12 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.MILLISECOND, 0);
 
         Date today = new Date();
-        long intervalDay = 24 * 60 * 60 * 1000;// 24시간
+        long intervalDay = 24 * 60 * 60 * 1000; // 24시간
 
         long selectTime=calendar.getTimeInMillis();
         long currenTime=System.currentTimeMillis();
 
-        //설정한 시간<현재 시간 알람이 다음날 울리게 설정
+        // 설정한 시간<현재 시간 알람이 다음날 울리게 설정
         if(currenTime>selectTime){
             selectTime += intervalDay;
         }
@@ -205,13 +205,13 @@ public class MainActivity extends AppCompatActivity {
         // 지정한 시간에 매일 알림
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, selectTime,  intervalDay, pIntent);
 
-    }// regist()
+    }
 
     public void unregist(View view) {
         Intent intent = new Intent(this, AlarmSetting.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
         alarmManager.cancel(pIntent);
-    }// unregist()
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

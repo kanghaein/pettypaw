@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+// 그룹관리 권한을 그룹장에게만 주기 위한 그룹장 전용 "설정" 액티비티
 public class LeaderSetting extends AppCompatActivity {
 
+    // 알림설정, 반려동물 등록/편집, 그룹관리, 이용중인 캘린더
     Button btn_alram, btn_pet_register_edit, btn_grp_management, btn_calender;
 
     @Override
@@ -33,7 +35,6 @@ public class LeaderSetting extends AppCompatActivity {
             public void onClick(View v){
                 Intent intent = new Intent(getApplicationContext(), pet_list.class);
                 startActivity(intent);
-
             }
         });
 

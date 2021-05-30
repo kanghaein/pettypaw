@@ -2,61 +2,48 @@ package com.example.pettypaw_1;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.renderscript.Sampler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.Spinner;
-
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.installations.Utils;
 
 import java.util.Calendar;
 
+// 캘린더 기능을 수행하기 위한 어댑터
 public class MonthAdapter extends BaseAdapter {
 
     Calendar cal;
     Context mContext;
+    String LeaderID;
 
+    // MainActivity 에서 로그인 할 때 입력한 ID 값, 즉 자신의 ID
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
 
+    // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User.java 를 통해 데이터베이스 접근
     final DatabaseReference userDB = mDatabase.getReference("User");
-    // Uer_pet.java 를 통해 데이터베이스 접근
+    // Uer_event.java 를 통해 데이터베이스 접근
     final DatabaseReference eventDB = mDatabase.getReference("User_event");
+    // Uer_pet.java 를 통해 데이터베이스 접근
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
 
-    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
-    String LeaderID;
-
+    // 날짜 변수
     MonthItem[] items;
     int curYear;
     int curMonth;
 
     MonthAdapter(Context context) {
-        super();
-        mContext = context;
-        init();
-    }
-
-    MonthAdapter(Context context, AttributeSet attrs) {
         super();
         mContext = context;
         init();
@@ -157,7 +144,6 @@ public class MonthAdapter extends BaseAdapter {
                                         }
                                     }
                                 }
-
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
 
@@ -167,14 +153,12 @@ public class MonthAdapter extends BaseAdapter {
 
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

@@ -5,16 +5,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,34 +23,34 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+// 설정의 그룹관리 액티비티
 public class GroupManagement extends AppCompatActivity {
 
-    Button btn_search, btn_exit;
-    SearchView searchView;
-    String user_invite;
+    Button btn_search, btn_exit; // 검색버튼, 나가기버튼
+    SearchView searchView; // 유저 검색을 위한 서치뷰 선언
+    String user_invite; // 초대하고자 하는 사람
 
     // 리스트뷰와 리스트를 담기위한 배열을 객체 선언
     private ListView search_list;
     private ArrayAdapter<String> adapter;
     List<Object> Array = new ArrayList<Object>();
 
+    // MainActivity 에서 로그인 할 때 입력한 ID 값, 즉 자신의 ID
     String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    final FirebaseDatabase mDatabase1 = FirebaseDatabase.getInstance();
     // User.java 와 User_list 를 통해 데이터베이스 접근
     final DatabaseReference UserDB = mDatabase.getReference("User");
-    final DatabaseReference UserListDB = mDatabase1.getReference("User_list");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_management);
 
+        // 검색 결과가 출력될 리스트
         search_list = (ListView) findViewById(R.id.search_list);
         search_list.setAdapter(adapter);
-
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>());
         search_list.setAdapter(adapter);
 
@@ -62,7 +59,6 @@ public class GroupManagement extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             public boolean onQueryTextSubmit(String query) {
-
                 UserDB.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -75,11 +71,9 @@ public class GroupManagement extends AppCompatActivity {
                             Array.add(query);
                             adapter.add(query);
                         }
-
                         adapter.notifyDataSetChanged();
                         search_list.setSelection(adapter.getCount() - 1);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -87,9 +81,7 @@ public class GroupManagement extends AppCompatActivity {
                 });
                 return true;
             }
-
             public boolean onQueryTextChange(String newText) {
-
                 return false;
             }
         });
@@ -102,7 +94,7 @@ public class GroupManagement extends AppCompatActivity {
                 ad.setTitle("초대");
                 ad.setMessage("해당 사용자를 초대하시겠습니까?");
 
-                // 확인버튼
+                // 팝업창의 확인버튼
                 ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -128,7 +120,6 @@ public class GroupManagement extends AppCompatActivity {
                                     finish();
                                 }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -137,7 +128,7 @@ public class GroupManagement extends AppCompatActivity {
                     }
                 });
 
-                // 취소버튼
+                // 팝업창의 취소버튼
                 ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

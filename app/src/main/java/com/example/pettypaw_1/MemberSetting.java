@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+// 그룹멤버 전용 "설정" 액티비티
 public class MemberSetting extends AppCompatActivity {
 
+    // 알림설정, 반려동물 등록/편집, 이용중인 캘린더
     Button btn_alram, btn_pet_register_edit, btn_calender;
 
     @Override
