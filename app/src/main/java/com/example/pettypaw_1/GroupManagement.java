@@ -90,7 +90,7 @@ public class GroupManagement extends AppCompatActivity {
         search_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-                AlertDialog.Builder ad = new AlertDialog.Builder(GroupManagement.this);
+                AlertDialog.Builder ad = new AlertDialog.Builder(GroupManagement.this,R.style.MyAlertDialogStyle);
                 ad.setTitle("초대");
                 ad.setMessage("해당 사용자를 초대하시겠습니까?");
 
