@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// 회원가입
 public class SignupActivity extends AppCompatActivity {
 
 
@@ -46,20 +47,23 @@ public class SignupActivity extends AppCompatActivity {
         final DatabaseReference userDB = mDatabase.getReference("User");
 
 
-
         // 비밀번호 일치 확인 검사 작업
-        sign_PW_check.addTextChangedListener(new TextWatcher(){
+        sign_PW_check.addTextChangedListener(new TextWatcher() {
+
+            // 입력 전에 호출되는 API
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
-            public void onTextChanged(CharSequence s, int start, int before, int count){
+            // EditText에 변화가 있을 때
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String getUserPw = sign_PW.getText().toString();
                 String getUserPwCheck = sign_PW_check.getText().toString();
             }
 
-            public  void afterTextChanged(Editable s){
+            // 입력이 끝났을 때
+            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -69,23 +73,25 @@ public class SignupActivity extends AppCompatActivity {
         btn_dc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String getUserId = sign_ID.getText().toString();
 
                 userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // 아이디 입력창이 비어있다면
-                        if (getUserId.equals("")){
+
+                        // 아이디 입력창이 비어있다면 알려준다.
+                        if (getUserId.equals("")) {
                             Toast.makeText(SignupActivity.this, "ID를 입력해주세요", Toast.LENGTH_SHORT).show();
                         }
-                        //sign ID 랑 파이어베이스에 있는 데이터랑 겹치면
+
+                        // 입력한 아이디가 파이어베이스에 있는 데이터와 겹치면 알려준다.
                         else if (snapshot.child(getUserId).exists()) {
 
                             Toast.makeText(SignupActivity.this, "이미 사용중인 ID 입니다.", Toast.LENGTH_SHORT).show();
                         }
-                        //sign ID 랑 파이어베이스에 있는 데이터랑 겹치지 않으면
-                        else{
+
+                        // 입력한 아이디가 파이어베이스에 있는 데이터와 겹치지 않으면 알려준다.
+                        else {
                             Toast.makeText(SignupActivity.this, "사용하실 수 있는 ID 입니다.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -99,34 +105,39 @@ public class SignupActivity extends AppCompatActivity {
         });
 
 
-        // 가입완료 버튼
+        // 가입완료 버튼 클릭 이벤트 처리
         btn_complete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { // 버튼을 누르면 아래 작업 실행
+            public void onClick(View v) {
 
                 String getUserId = sign_ID.getText().toString();
                 String getUserPw = sign_PW.getText().toString();
                 String getUserPwCheck = sign_PW_check.getText().toString();
 
-                // 비밀번호와 비밀번호확인이 일치하지 않는다면
-                if(!getUserPw.equals(getUserPwCheck)){
+                // 비밀번호와 비밀번호 확인이 일치하지 않는다면 알려준다.
+                if (!getUserPw.equals(getUserPwCheck)) {
                     Toast.makeText(SignupActivity.this, "PW가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
                 }
-                // 입력창들의 공백처리
-                else if (getUserId.equals("") || getUserPw.equals("") || getUserPwCheck.equals("")){
+
+                // 비어있는 입력창이 하나라도 존재한다면 알려준다.
+                else if (getUserId.equals("") || getUserPw.equals("") || getUserPwCheck.equals("")) {
                     Toast.makeText(SignupActivity.this, "ID 혹은 PW 를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
-                // 비밀번호와 비밀번호 확인이 일치한다면 DB에 데이터 저장
+
+                // 비밀번호와 비밀번호 확인이 일치한다면 DB에 데이터 저장한다.
                 else {
+
                     // addListenerForSingleValueEvent 를 이용한 데이터 읽기
                     userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                            // 파이어베이스에 이미 등록된 아이디라면 알려준다.
                             if (snapshot.child(getUserId).exists()) {
                                 Toast.makeText(SignupActivity.this, "ID 혹은 PW 를 확인해주세요", Toast.LENGTH_SHORT).show();
-
                             }
+
+                            // 그렇지 않다면 user객체에 아이디와 비밀번호 저장 후 user_list 초기화
                             else {
                                 User user = new User(getUserId, getUserPw);
                                 User_list user_list = new User_list("null", "null");
@@ -153,7 +164,6 @@ public class SignupActivity extends AppCompatActivity {
                     });
 
                 }
-
 
 
             }

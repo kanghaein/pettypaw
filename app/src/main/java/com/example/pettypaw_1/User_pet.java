@@ -1,5 +1,6 @@
 package com.example.pettypaw_1;
 
+// 강아지 정보를 담기 위한 User_pet 클래스
 public class User_pet {
     public String Pet_Name;
     public String Pet_age;

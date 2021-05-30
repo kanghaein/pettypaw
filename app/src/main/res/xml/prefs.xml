@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        android:title="Push Alarm on/off">
+    <!--    설정한 날짜에 푸시 알림 제공-->
+    <PreferenceCategory android:title="Push Alarm on/off">
 
+        <!--        SwitchPreference를 이용하여 알림 기능을 켜거나 끌 수 있도록 했다.-->
         <SwitchPreference
-            android:title="푸시 알림"
-            android:key="pushAlarm"
             android:defaultValue="true"
-            android:summary="설정한 일 전에 알림 전송" />
+            android:key="pushAlarm"
+            android:summary="설정한 일 전에 알림 전송"
+            android:title="푸시 알림" />
 
         <ListPreference
-            android:title="시간 설정"
-            android:key="alarm"
+            android:dependency="pushAlarm"
             android:entries="@array/alarmlist"
             android:entryValues="@array/alarmlist_value"
-            android:dependency="pushAlarm"/>
+            android:key="alarm"
+            android:title="시간 설정" />
 
     </PreferenceCategory>
 

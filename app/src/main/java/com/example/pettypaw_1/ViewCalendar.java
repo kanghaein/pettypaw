@@ -29,33 +29,24 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+// 메인 캘린더
 public class ViewCalendar extends AppCompatActivity {
 
+    // 다른 액티비티에서 접근 가능
     public static Context context_view;
-
 
     GridView monthView;
     TextView monthText;
     MonthAdapter adt;
 
-
-    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
-    //int c;
-
-    //Intent intent = getIntent();
-
-    //Integer[] array = new Integer[3];
-    //ArrayList<String> test = new ArrayList<>();
+    // MainActivity 에서 가져온 lg_ID 라는 변수 이용 => 로그인한 ID를 부모로 펫정보 입력
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
     String[] arrDay = new String[3]; // 날짜를 담기 위한 배열 선언 (년/월/일)이므로 3개의 공간 필요
 
-
+    // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User.java 를 통해 데이터베이스 접근
     final DatabaseReference userDB = mDatabase.getReference("User");
-    // Uer_pet.java 를 통해 데이터베이스 접근
-    final DatabaseReference GroupDB = mDatabase.getReference("Group");
-
-    final DatabaseReference petDB = mDatabase.getReference("User_pet");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,50 +55,36 @@ public class ViewCalendar extends AppCompatActivity {
 
         context_view = this;
 
-
-        monthView = findViewById(R.id.monthView); //그리드뷰 객체 참조
-        adt = new MonthAdapter(this); //어댑터 객체 생성
-        monthView.setAdapter(adt); //그리드뷰에 어댑터 설정
-
+        monthView = findViewById(R.id.monthView); // 그리드뷰 객체 참조
+        adt = new MonthAdapter(this); // 어댑터 객체 생성
+        monthView.setAdapter(adt); // 그리드뷰에 어댑터 설정
         monthText = findViewById(R.id.monthText);
-        setMonthText();
+
+        setMonthText(); // 현재 년, 월 출력
 
         Button monthPrevious = findViewById(R.id.monthPrevious);
         Button monthNext = findViewById(R.id.monthNext);
 
-        //할일 listview로 설정한다.
-        ListView todo_list = (ListView) findViewById(R.id.todo_list);
-
-
-        //그리드 셀 클릭 시 스케줄 추가 버튼으로 넘어가게 설정
+        // 그리드 셀(날짜) 클릭 시 스케줄 추가 버튼으로 넘어가도록 이벤트 처리
         monthView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MonthItem item = (MonthItem)adt.getItem(position);   // 해당 아이템 가져옴
+                MonthItem item = (MonthItem) adt.getItem(position); // 해당 position의 아이템 가져옴
 
-
-                //array[0] = adt.curYear;
-                //array[1] = adt.curMonth+1;
-                //array[2] = item.getDay();
-
-                //String current_date = Arrays.toString(array);
+                // 년, 월, 일 정보를 전달하기 위해 String으로 변환
                 String year = Integer.toString(adt.curYear);
-                String month = Integer.toString((adt.curMonth)+1);
+                String month = Integer.toString((adt.curMonth) + 1);
                 String day = Integer.toString(item.getDay());
-
-                //test.add(year);
-                //test.add(month);
-                //test.add(day);
 
                 // 각 index에 날짜 값을 담는다
                 arrDay[0] = year;
                 arrDay[1] = month;
                 arrDay[2] = day;
 
-                // CheckDetail 액티비티에 날짜 값들을 전송
+                // CheckDetail 창으로 이동하며 해당 액티비티에 날짜 값들을 전달
                 Intent intent = new Intent(getApplicationContext(), CheckDetail.class);
                 intent.putExtra("click_day", arrDay);
-                intent.putExtra("date",adt.curYear + "년" + (adt.curMonth+1) + "월" + item.getDay() + "일");
+                intent.putExtra("date", adt.curYear + "년" + (adt.curMonth + 1) + "월" + item.getDay() + "일");
 
                 startActivity(intent);
                 finish();
@@ -116,62 +93,63 @@ public class ViewCalendar extends AppCompatActivity {
 
         });
 
-        // 뒤로가기 버튼 이벤트 리스너 설정
+        // "이전 달"버튼 이벤트 리스너
         monthPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 adt.setPreviousMonth();
-                adt.notifyDataSetChanged(); //어댑터 데이터 갱신하고 뷰 다시 뿌리기
-                setMonthText();
-                //c = adt.getCurMonth()+1;
-                //Toast.makeText(getApplicationContext(),"월 : "+ c,Toast.LENGTH_SHORT).show();
+                adt.notifyDataSetChanged(); // 어댑터 데이터 갱신 후 뷰 출력
+                setMonthText(); // 현재 년, 월 출력
             }
         });
 
-        // 앞으로 가기 버튼에 이벤트 리스너 설정
+        // "다음 달"버튼 이벤트 리스너
         monthNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 adt.setNextMonth();
-                adt.notifyDataSetChanged(); //어댑터 데이터 갱신하고 뷰 다시 뿌리기
-                setMonthText();
-                //c = adt.getCurMonth()+1;
-                //Toast.makeText(getApplicationContext(),"월 : "+ c,Toast.LENGTH_SHORT).show();
+                adt.notifyDataSetChanged(); // 어댑터 데이터 갱신 후 뷰 출력
+                setMonthText(); // 현재 년, 월 출력
             }
         });
     }
 
-    public void setMonthText(){
+    // 현재 년, 월 출력
+    public void setMonthText() {
         int curYear = adt.getCurYear();
         int curMonth = adt.getCurMonth();
-        monthText.setText(curYear+"년 "+(curMonth+1)+"월");
+        monthText.setText(curYear + "년 " + (curMonth + 1) + "월");
     }
 
-    //액션버튼 메뉴 액션바에 집어넣기
+    // 액션버튼 메뉴 액션바에 넣기
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
-    //액션버튼 클릭했을 때 동작
+    // 액션버튼 클릭했을 때 이벤트 처리
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //설정 아이콘
+
+        // 설정 아이콘
         if (id == R.id.setting_icon) {
             userDB.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                    // User List의 "Invite"에 접근
                     String Invite = snapshot.child("User List").child(getUserID).child("Invite").getValue().toString();
+
                     // 리더로 지정된 유저라면 LeaderSetting 으로 이동
                     if (Invite.equals("Leader")) {
                         Intent intent = new Intent(getApplicationContext(), LeaderSetting.class);
                         startActivity(intent);
                     }
+
                     // 리더가 아닌 유저라면 MemberSetting 으로 이동
-                    else{
+                    else {
                         Intent intent = new Intent(getApplicationContext(), MemberSetting.class);
                         startActivity(intent);
                     }

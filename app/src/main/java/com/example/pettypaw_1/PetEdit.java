@@ -1,4 +1,4 @@
-  
+
 package com.example.pettypaw_1;
 
 import androidx.annotation.NonNull;
@@ -22,29 +22,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
+// 강아지 등록
 public class PetEdit extends AppCompatActivity {
 
     EditText et_name, et_age;
     Button btn_enroll;
     RadioButton rb_man, rb_woman;
     RadioGroup rg_gender;
-    String getPetGender; // 애완동물 성별 값을 전달받을 변수
-    Spinner spinner;
-    String LeaderID;
+    String getPetGender; // 강아지 성별 값을 전달받을 변수
+    Spinner spinner; // 강아지 색상 선택 스피너
+    String LeaderID; // 그룹의 리더 아이디를 전달받을 변수
     String Color;
 
     // 파이어베이스 연동
     final FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     // User_pet.java 를 통해 데이터베이스 접근
     final DatabaseReference petDB = mDatabase.getReference("User_pet");
+    // User.java를 통해 데이터베이스 접근
     final DatabaseReference UserDB = mDatabase.getReference("User");
 
     // 다른 액티비티에서 접근 가능
     public static Context context_enrollment1;
 
     // MainActivity 에서 가져온 lg_ID 라는 변수 이용 => 로그인한 ID를 부모로 펫정보 입력
-    String getUserID = ((MainActivity)MainActivity.context_main).lg_ID.getText().toString();
+    String getUserID = ((MainActivity) MainActivity.context_main).lg_ID.getText().toString();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,27 +55,27 @@ public class PetEdit extends AppCompatActivity {
         // 다른 액티비티에서 접근 가능
         context_enrollment1 = this;
 
-        // 터치한 리스트의 이름을 가져온다. pet_list.java 로부터 전송받음
+        // 터치한 리스트의 이름을 가져온다. pet_list.java 로부터 전송받는다.
         Intent intent = getIntent();
         String name = intent.getStringExtra("ListNamePosition");
 
+        // 레이아웃 id 값들을 불러와 변수에 저장
         et_name = findViewById(R.id.et_name);
         et_age = findViewById(R.id.et_age);
         btn_enroll = findViewById(R.id.btn_enroll);
-        rg_gender = (RadioGroup)findViewById(R.id.rg_gender);
-        rb_man = (RadioButton)findViewById(R.id.rb_man);
-        rb_woman = (RadioButton)findViewById(R.id.rb_woman);
-        spinner = (Spinner)findViewById(R.id.spinner);
+        rg_gender = (RadioGroup) findViewById(R.id.rg_gender);
+        rb_man = (RadioButton) findViewById(R.id.rb_man);
+        rb_woman = (RadioButton) findViewById(R.id.rb_woman);
+        spinner = (Spinner) findViewById(R.id.spinner);
 
 
         // 라디오버튼 이벤트
         rg_gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if(i == R.id.rb_man){ // 남자 버튼을 누르면 getPetGender 에 "남자" 반환
+                if (i == R.id.rb_man) { // 남자 버튼을 누르면 getPetGender 에 "남자" 반환
                     getPetGender = rb_man.getText().toString();
-                }
-                else if(i == R.id.rb_woman){ // 여자 버튼을 누르면 getPetGender 에 "여자" 반환
+                } else if (i == R.id.rb_woman) { // 여자 버튼을 누르면 getPetGender 에 "여자" 반환
                     getPetGender = rb_woman.getText().toString();
                 }
             }
@@ -85,6 +86,8 @@ public class PetEdit extends AppCompatActivity {
         btn_enroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // 파이어베이스에서 문자열로 인식할 수 있도록 String 변환
                 String getPetName = et_name.getText().toString();
                 String getPetAge = et_age.getText().toString();
                 String getColor = spinner.getSelectedItem().toString();
@@ -97,21 +100,27 @@ public class PetEdit extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         LeaderID = snapshot.child("User List").child(getUserID).child("Leader_ID").getValue().toString();
 
+                        // 등록된 강아지 정보 수정 구현을 위해 petDB로 접근한다.
                         petDB.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(getPetName.equals("") || getPetAge.equals("")) {
+
+                                // 반려동물의 이름과 나이가 비어있다면 알려준다.
+                                if (getPetName.equals("") || getPetAge.equals("")) {
                                     Toast.makeText(PetEdit.this, "정보를 입력해주세요", Toast.LENGTH_SHORT).show();
                                 }
+
+                                // 그렇지 않다면
                                 else {
+
                                     // 자신이 속한 그룹의 "Pet Information" 이하 자식들에 대해 모두 한번씩 반복한다. (반려동물 색상 중복체크)
-                                    for(DataSnapshot ds : snapshot.child(LeaderID).child("Pet Information").getChildren()) {
+                                    for (DataSnapshot ds : snapshot.child(LeaderID).child("Pet Information").getChildren()) {
 
                                         // "Pet Information" 이하 자식들 중에서도 "Color" 라는 자식이 가지는 값을 문자열로 받아와 Color 라는 변수에 저장
                                         Color = ds.child("Color").getValue().toString();
 
-                                        // 만약 입력한 색과 받아온 색의 값이 같다면
-                                        if(getColor.equals(Color)){
+                                        // 만약 입력한 색과 받아온 색의 값이 같다면 알려준다.
+                                        if (getColor.equals(Color)) {
                                             Toast.makeText(PetEdit.this, "이미 사용중인 색상입니다", Toast.LENGTH_SHORT).show();
                                             break;
                                         }
@@ -119,8 +128,9 @@ public class PetEdit extends AppCompatActivity {
 
                                     // break 를 걸었으므로 반복문이 끝나고 색깔이 중복되었으면 변수 Color는 입력한 색과 동일한 값이다
                                     // 색이 중복되지 않았으면 변수 Color는 입력한 색과 다른 값이므로 이것을 조건으로 추가등록 구현
-                                    if(!getColor.equals(Color)) {
+                                    if (!getColor.equals(Color)) {
 
+                                        // User_pet 객체에 받은 정보들 저장
                                         User_pet pet = new User_pet(getPetName, getPetAge, getPetGender, getColor);
 
                                         // 반려동물 편집기능을 위한 기존노드 null 처리 후 새로운 노드 추가
@@ -137,6 +147,7 @@ public class PetEdit extends AppCompatActivity {
                                         Toast.makeText(PetEdit.this, "수정 완료", Toast.LENGTH_SHORT).show();
                                         finish();
 
+                                        // 수정 완료 후 pet_list 창으로 전환
                                         Intent intent = new Intent(getApplicationContext(), pet_list.class);
                                         startActivity(intent);
                                     }
@@ -149,6 +160,7 @@ public class PetEdit extends AppCompatActivity {
                             }
                         });
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 

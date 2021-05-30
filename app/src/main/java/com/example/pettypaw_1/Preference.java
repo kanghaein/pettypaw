@@ -8,7 +8,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-
+// 푸시 알림 받을 날짜 설정
 public class Preference extends PreferenceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -18,15 +18,14 @@ public class Preference extends PreferenceActivity {
     }
 
     private void Load_alarm() {
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-
+        // prefs.xml에서 "alarm"으로 설정한 key 받아온다.
         ListPreference LP = (ListPreference) findPreference("alarm");
 
+        //ListPreference를 이용하여 푸시 알림 받을 날짜를 선택
         LP.setOnPreferenceChangeListener(new android.preference.Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(android.preference.Preference prefs, Object o) {
-
+                // 각 날짜 선택할 때마다 알려준다.
                 String items = (String) o;
                 if (prefs.getKey().equals("alarm")) {
                     switch (items) {
@@ -50,6 +49,7 @@ public class Preference extends PreferenceActivity {
         });
     }
 
+    // 액티비티 활성화된 상태에서 Load_alarm() 함수 호출
     @Override
     protected void onResume() {
         Load_alarm();
