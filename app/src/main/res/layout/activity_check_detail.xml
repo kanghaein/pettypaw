@@ -47,7 +47,7 @@
             android:id="@+id/tv_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="40dp"
+            android:textSize="35dp"
             android:gravity="center" />
 
         <androidx.recyclerview.widget.RecyclerView
