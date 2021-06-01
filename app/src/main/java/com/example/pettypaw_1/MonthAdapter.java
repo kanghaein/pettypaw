@@ -127,7 +127,7 @@ public class MonthAdapter extends BaseAdapter {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.child(ymd_id).exists()) {
-                                        view.setBackgroundColor(Color.GRAY);
+                                        view.setBackgroundColor(Color.parseColor("#e1f5fe"));
                                         /**********일정 표시 디자인 부분**********/
                                         //view.setBackgroundResource(R.drawable.ic_baseline_lens_24);
                                         view.setItem(item);
